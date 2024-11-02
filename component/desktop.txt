@@ -11,3 +11,6 @@ v0.1
 v0.2
  Show graph of how data sources are combined
  Compatible with tds and tdsx
+v0.3
+ Supports multi-file conversion
+ Display graphs on the screen(Please save the graph from HTML)
