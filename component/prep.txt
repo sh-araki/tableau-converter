@@ -45,3 +45,6 @@ v2.1
  1 Supports multiple name changes
 v2.2
  1 Supports wildcard union of data (Excel)
+v2.3
+ 1 Supports multi-file conversion
+ 2 Display graphs on the screen(Please save the graph from HTML)
