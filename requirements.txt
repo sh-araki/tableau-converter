@@ -1,0 +1,7 @@
+streamlit
+pandas
+graphviz
+xlsxwriter
+Pillow
+lxml
+numpy

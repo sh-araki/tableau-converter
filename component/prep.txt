@@ -1,0 +1,47 @@
+This is a tool that generates specifications images from tfl or tflx files.
+Upload the tfl file or tflx file to uploader.
+Normally, a svg file is output after execution, but some error may be occur.
+My X Account is https://twitter.com/sh_araki
+
+**********Change Log**********
+v1.0
+ New created
+v1.1 
+ 1 Fixed a bug where the internal ID was displayed in the output part.
+ 2 Change the shape so that it does not take up the vertical and horizontal width when displaying
+ 3 Union name reduction
+ 4 Fixed the same name count bug (〇〇-2 became 〇〇-1-1)
+ 5 Fixed a bug where elements such as field deletion and renaming could not be retrieved when retrieving join elements.
+v1.2
+ 1 Fixed a bug where duplicate rows were generated when the name was the same as an already existing field when processing add_column.
+ 2 If the calculation is created on a new line, it will be displayed on a new line.
+ 3 Display pivot items on new lines
+v1.3
+ 1 Fixed a bug that caused abnormal termination when GraphViz was not installed
+v1.4
+ 1 Description of the output process when outputting Excel
+ 2 Fixed a bug where the tool would stop when importing an Excel file.
+v1.5
+ 1 Fixed a bug that occurred when importing fields on a node with a data source error.
+ 2 Add app icon
+v1.6
+ 1 Fixed a bug where the dot language was duplicated when processing keep_columns in the cleaning step
+ 2 Add readme.txt
+v1.7
+ 1 Fixed a bug that stopped when the tfl name had spaces.
+ 2 Display the name of the tfl file being processed
+ 3 Fixed a bug where data could not be picked up during unpivot processing
+v1.8
+ 1 Supports new row generation process
+ 2 Cleaning step Compatible with various calculations
+v1.9
+ 1 Refactor all code 
+ 2 Display input and output list 
+ 3 Display deleted columns, renamed columns, and columns to keep 
+ 4 Display fields with primary keys set
+v2.0
+ 1 Supports wildcard pivot
+v2.1
+ 1 Supports multiple name changes
+v2.2
+ 1 Supports wildcard union of data (Excel)

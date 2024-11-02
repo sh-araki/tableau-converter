@@ -1,0 +1,14 @@
+This is a tool that generates specifications images from twb or twbx files
+Upload the twb file or twbx file to uploader.
+Normally, a xlsx file and a svg file is output after execution, but an error may be occur.
+In that case, please send email.
+My X Account is https://twitter.com/sh_araki
+
+**********Change Log**********
+v0.0
+ Test Version New Created
+v0.1
+ Directed graph drawing of action list
+v0.2
+ Show graph of how data sources are combined
+ Compatible with tds and tdsx
