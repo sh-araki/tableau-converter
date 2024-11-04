@@ -73,8 +73,7 @@ def main():
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
             st.write('datasource graph')
-            #st.graphviz_chart(desktop_dict[dict_keys[i]][0])
-            st.markdown(f'<div>{desktop_dict[dict_keys[i]][0].pipe(format='svg').decode('utf-8')}</div>', unsafe_allow_html=True)
+            st.graphviz_chart(desktop_dict[dict_keys[i]][0])
 
             st.write('action graph')
             st.graphviz_chart(desktop_dict[dict_keys[i]][1])
