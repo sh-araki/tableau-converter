@@ -5,8 +5,8 @@ import shutil
 import glob
 import zipfile
 from pathlib import Path
-from component.prep import convert_prep
-from component.desktop import convert_desktop
+from prep import convert_prep
+from desktop import convert_desktop
 import datetime as dt
 import time
 import xlsxwriter
@@ -74,7 +74,6 @@ def main():
             )
             st.write('datasource graph')
             st.graphviz_chart(desktop_dict[dict_keys[i]][0])
-
             st.write('action graph')
             st.graphviz_chart(desktop_dict[dict_keys[i]][1])
 
