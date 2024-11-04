@@ -31,7 +31,6 @@ def main():
       for i in range(len(dict_keys)):
         with st_tabs[i]:
           st.graphviz_chart(prep_dict[dict_keys[i]])
-          my_component()
   with tab2:
     st.title("Tableau Desktop's Workbook File Converter")
     desktop_dict = {}
