@@ -234,10 +234,11 @@ def convert_process(flow, display_settings):
       node_pk = pd.DataFrame(columns=['name', 'PK'])
       if len(properties)>0:
         node_property = properties[properties['node_id']==i]
-        pk_list = node_property['fieldNames'].to_list()
-        if len(pk_list)>0:
-          node_pk = pd.DataFrame(pk_list[0], columns=['name'])
-          node_pk['PK']='〇'
+        if len(node_property)>0:
+          pk_list = node_property['fieldNames'].to_list()
+          if len(pk_list)>0:
+            node_pk = pd.DataFrame(pk_list[0], columns=['name'])
+            node_pk['PK']='〇'
       node_field = pd.merge(node_field, node_pk, on='name', how='left')
       node_field = merge_remove_rename_add(node_actions, node_field)
       node_field = node_field.sort_values('ordinal').drop(columns='ordinal')
