@@ -49,3 +49,5 @@ v2.2
 v2.3
  1 Supports multi-file conversion
  2 Display graphs on the screen(Please save the graph from HTML)
+v2.4
+ 1 Supports merged-field conversion
