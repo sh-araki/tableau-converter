@@ -6,6 +6,9 @@ import graphviz
 import zipfile
 from pathlib import Path
 
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+
 #--------------advance_function------------
 def settings_info(path):
   f = open(path, 'r', encoding="utf-8")
@@ -42,10 +45,10 @@ def return_connection_info(node_connection):
 def insert_next_fields(next_node_info, node_field):
   next_node_info = next_node_info.reset_index(drop=True)[['nextNodeId']]
   next_node_info['namespace'] = ''
-  next_field = node_field.reset_index(drop=True)[['name', 'remove', 'rename', 'keep']]
+  next_field = node_field.reset_index(drop=True)[['name', 'remove', 'merge', 'rename', 'keep']]
   next_field.loc[next_field['rename'] != '', 'name'] = next_field['rename']
   next_field['namespace'] =''
-  next_field = next_field[next_field['remove']=='']
+  next_field = next_field[(next_field['remove']=='') & (next_field['merge']=='')]
   if 'keep' in next_field['keep'].to_list():
     next_field=next_field[next_field['keep']=='keep']
   next_field = pd.merge(next_field[['name', 'namespace']], next_node_info, on='namespace', how='left').drop(columns='namespace').rename(columns={'nextNodeId':'node_id'})
@@ -61,8 +64,21 @@ def merge_remove_rename_add(node_actions, node_field):
       remove_actions = pd.DataFrame(remove_list).rename(columns={0:'name'})
       remove_actions['remove']='removed'
       node_field = pd.merge(node_field, remove_actions, on='name', how='left')
+      print(node_field)
     else:
       node_field['remove'] = None
+    if len(node_actions[node_actions['nodeType'].str.contains('Merge')])>0:
+      merge_list = []
+      merge_actions = node_actions[node_actions['nodeType'].str.contains('Merge')][['mergeColumnsList', 'mergedColumnName']]
+      for row, item in merge_actions.iterrows():
+        item['mergeColumnsList'].remove(item['mergedColumnName'])
+        merge_list = merge_list + item['mergeColumnsList']
+      merge_actions = pd.DataFrame(merge_list).rename(columns={0:'name'})
+      merge_actions['merge']='merged'
+      node_field = pd.merge(node_field, merge_actions, on='name', how='left')
+      print(node_field)
+    else:
+      node_field['merge'] = None
     if len(node_actions[node_actions['nodeType'].str.contains('Rename')])>0:
       if len(node_actions[node_actions['nodeType'].str.contains('Bulk')])>0:
         rename_actions = []
@@ -103,6 +119,7 @@ def merge_remove_rename_add(node_actions, node_field):
       node_field['keep'] = None
   else:
     node_field['remove'] = None
+    node_field['merge'] = None
     node_field['rename'] = None
     node_field['add'] = None
     node_field['keep'] = None
@@ -234,11 +251,10 @@ def convert_process(flow, display_settings):
       node_pk = pd.DataFrame(columns=['name', 'PK'])
       if len(properties)>0:
         node_property = properties[properties['node_id']==i]
-        if len(node_property)>0:
-          pk_list = node_property['fieldNames'].to_list()
-          if len(pk_list)>0:
-            node_pk = pd.DataFrame(pk_list[0], columns=['name'])
-            node_pk['PK']='〇'
+        pk_list = node_property['fieldNames'].to_list()
+        if len(pk_list)>0:
+          node_pk = pd.DataFrame(pk_list[0], columns=['name'])
+          node_pk['PK']='〇'
       node_field = pd.merge(node_field, node_pk, on='name', how='left')
       node_field = merge_remove_rename_add(node_actions, node_field)
       node_field = node_field.sort_values('ordinal').drop(columns='ordinal')
@@ -313,7 +329,7 @@ def convert_process(flow, display_settings):
         else:
           node_actions = pd.DataFrame(container_list).set_index('id').reset_index()
       node_field = merge_remove_rename_add(node_actions, node_field)
-      node_field = node_field.reindex(columns=['name', 'remove', 'rename', 'add', 'keep'])
+      node_field = node_field.reindex(columns=['name', 'remove', 'merge', 'rename', 'add', 'keep'])
       if len(next_node_info)>0:
         df_list.append(insert_next_fields(next_node_info, node_field))
       node_info = '<tr><td colspan="6" bgcolor="'+ node_color +'">' + node_name+ '</td>'
