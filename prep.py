@@ -382,7 +382,7 @@ def convert_process(flow, display_settings):
       graph.node(i,  shape='folder', label=label, pos=node_pos)
     #Union
     if 'SuperUnion' in node_type:
-      node_field = return_node_field(i, df_list)
+      node_field = return_node_field(i, df_list).drop_duplicates()
       node_actions = node_json['actionNode']
       node_actions = pd.DataFrame(node_actions['namespaceFieldMappings'])
       node_annotation = return_annotation_info(node_json)
