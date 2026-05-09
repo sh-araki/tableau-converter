@@ -1,0 +1,463 @@
+{
+    "common": [
+            "nodeType",
+            "name",
+            "id",
+            "baseType",
+            "serialize",
+            "description"
+    ],
+    ".v1.RemoveColumns": {
+        "type": "remove_list",
+        "column": ["columnNames"],
+        "field_target": "columnNames"
+    },
+    ".v2019_2_2.KeepOnlyColumns": {
+        "type": "keep_list",
+        "column": ["columnNames"],
+        "field_target": "columnNames"
+    },
+    ".v1.AddColumn": {
+        "type": "add_column",
+        "column": [
+            "columnName", 
+            "expression"
+        ],
+        "field_target": "columnName"
+    },
+    ".v2019_2_3.DuplicateColumn": {
+        "type": "add_column",
+        "column": [
+            "columnName", 
+            "expression"
+        ],
+        "field_target": "columnName"
+    },
+    ".v2018_3_3.QuickCalcColumn": {
+        "type":"add_column",
+        "column": [
+            "columnName", 
+            "expression", 
+            "calcExpressionType"
+        ],
+        "field_target": "columnName"
+    },
+    ".v2024_2_0.QuickCalcColumn": {
+        "type":"add_column",
+        "column": [
+            "columnName", 
+            "expression", 
+            "calcExpressionType"
+        ],
+        "field_target": "columnName"
+    },
+    ".v2020_1_4.QuickDateCalcColumn": {
+        "type":"add_column",
+        "column": [
+            "columnName", 
+            "expression", 
+            "calcExpressionType"
+        ],
+        "field_target": "columnName"
+    },
+    ".v2021_1_4.QuickDateNameCalcColumn": {
+        "type":"add_column",
+        "column": [
+            "columnName", 
+            "expression", 
+            "calcExpressionType"
+        ],
+        "field_target": "columnName"
+    },
+    ".v2020_3_3.CustomFiscalYearCalcColumn": {
+        "type":"add_column",
+        "column": [
+            "columnName", 
+            "fiscalYearMonthOffset", 
+            "expression", 
+            "fiscalCalcExpressionType"
+        ],
+        "field_target": "columnName"
+    },
+    ".v1.MergeColumns":{
+        "type": "merge_column",
+        "column": [
+            "mergedColumnName", 
+            "mergeColumnsList"
+        ],
+        "field_target": {
+            "from": "mergeColumnsList",
+            "to": "mergedColumnName"
+        }
+    },
+    ".v1.RenameColumn": {
+        "type": "rename_column",
+        "column": [
+            "columnName", 
+            "rename"
+        ],
+        "field_target": {
+            "from": "columnName",
+            "to": "rename"
+        }
+    },
+    ".v2021_2_1.BulkRenameColumns": {
+        "type": "bulk_rename",
+        "column": [
+            "columnsSelection",
+            "columnsOperation"
+        ],
+        "field_target": {
+            "selection_type": {
+                "column": "columnsSelection",
+                "path": ["selectionRule", "type"],
+                "mode": "scalar"
+            },
+            "column_substr": {
+                "column": "columnsSelection",
+                "path": ["selectionRule", "columnNameSubStr"],
+                "mode": "scalar"
+            },
+            "included_columns": {
+                "column": "columnsSelection",
+                "path": ["includedColumns"],
+                "mode": "scalar"
+            },
+            "exempted_columns": {
+                "column": "columnsSelection",
+                "path": ["exemptedColumns"],
+                "mode": "scalar"
+            },
+            "operation_type": {
+                "column": "columnsOperation",
+                "path": ["type"],
+                "mode": "scalar"
+            },
+            "column_name_prefix": {
+                "column": "columnsOperation",
+                "path": ["columnNamePrefix"],
+                "mode": "scalar"
+            },
+            "column_name_suffix": {
+                "column": "columnsOperation",
+                "path": ["columnNameSuffix"],
+                "mode": "scalar"
+            },            "existing_subString": {
+                "column": "columnsOperation",
+                "path": ["existingSubString"],
+                "mode": "scalar"
+            },
+            "new_substring": {
+                "column": "columnsOperation",
+                "path": ["newSubString"],
+                "mode": "scalar"
+            }
+        }
+    },
+    ".v1.RangeFilter": {
+        "type": "filter",
+        "column": [
+            "ranges", 
+            "exclude"
+        ]
+    },
+    ".v1.FilterOperation": {
+        "type": "filter",
+        "column": ["filterExpression"]
+    },
+    ".v1.RichRelativeDateFilter": {
+        "type": "filter",
+        "column": [
+            "columnName",
+            "fieldId",
+            "timeIntervalDiscretization",
+            "filterSelection",
+            "lastTimeIntervalAmount",
+            "nextTimeIntervalAmount",
+            "isAnchoredRelativeToTimeInterval",
+            "timeIntervalAnchor",
+            "isIncludingNullValues"
+        ]
+    },
+    ".v2018_2_1.RichNullFilter": {
+        "type": "filter",
+        "column": [
+            "filter",
+            "columnName",
+            "fieldId"
+        ]
+    },
+    ".v2019_3_2.RichDiscreteValueFilter": {
+        "type": "filter",
+        "column": [
+            "exclude",
+            "values",
+            "datatype",
+            "fieldId",
+            "outOfSampleValues"
+        ]
+    },
+    ".v1.RichRangeFilter": {
+        "type": "filter",
+        "column":[
+            "richRangeType",
+            "columnName",
+            "fieldId",
+            "includeNulls",
+            "appliedMin",
+            "appliedMax",
+            "minimumValue",
+            "maximumValue",
+            "dataType"
+        ]
+    },
+    ".v2018_2_1.RichWildcardFilter": {
+        "type": "filter",
+        "column": [
+            "columnName",
+            "fieldId",
+            "excludeMatchingValues",
+            "text",
+            "filterType"
+        ]
+    },
+    ".v1.ChangeColumnType": {
+        "type": "change_column_type",
+        "column": ["fields"]
+    },
+    ".v2019_3_1.ChangeSemanticRole": {
+        "type": "change_value_type",
+        "column": [
+            "columnName", 
+            "semanticRole"
+        ]
+    },
+    ".v2019_1_4.Remap": {
+        "type": "remap_value",
+        "column": [
+            "columnName", 
+            "values", 
+            "groupMethodProps", 
+            "fieldId"
+        ]
+    },
+    ".v2018_2_3.SuperUnion": {
+        "column": [
+            "namespaceFieldMappings"
+        ],
+        "annotations": true
+    },
+    ".v1.SimpleUnion": {
+        "type": "union",
+        "column": ["namespaceFieldMappings"]
+    },
+    ".v2018_2_3.SuperJoin": {
+        "column": [
+            "conditions",
+            "joinType"
+        ],
+        "annotations": true
+    },
+    ".v1.SimpleJoin": {
+        "type": "join",
+        "column": [
+            "conditions", 
+            "joinType"
+        ]
+    },
+    ".v2018_2_3.SuperAggregate": {
+        "column": [
+            "groupByFields",
+            "aggregateFields"
+        ],
+        "annotations": true
+    },
+    ".v1.Aggregate": {
+        "type": "aggregate",
+        "column": [
+            "groupByFields",
+            "aggregateFields"
+        ]
+    },
+    ".v2021_3_1.SuperNewRows": {
+        "column": [
+            "newRowsGenerator",
+            "step",
+            "globalDefaultValue"
+        ],
+        "annotations": true
+    },
+    ".v2021_3_1.NewRows": {
+        "type": "newrows",
+        "column": [
+            "newRowsGenerator", 
+            "step", 
+            "globalDefaultValue"
+        ],
+        "field_target": {
+            "name": {
+                "column": "newRowsGenerator",
+                "path": ["newColumnName"],
+                "mode": "scalar"
+            }
+        }
+    },
+    ".v1.Container": {
+        "column": []
+    },
+    ".v2018_3_3.SuperPivot": {
+        "column": [
+            "defaultAggregation",
+            "aggregateColumnName",
+            "pivotColumnName",
+            "pivotGroupingColumns",
+            "newPivotColumns"
+        ],
+        "annotations": true
+    },   
+    ".v2018_3_3.Pivot": {
+        "type": "pivot",
+        "column": [
+            "defaultAggregation", 
+            "aggregateColumnName", 
+            "pivotColumnName", 
+            "pivotGroupingColumns", 
+            "newPivotColumns"
+        ],
+        "field_target": {
+            "from": "pivotColumnName",
+            "to": "newPivotColumns"
+        }
+    },
+    ".v2018_3_4.SuperUnpivotExtended": {
+        "column": [
+            "usesSmartDefaults",
+            "unpivotGroup"
+        ],
+        "annotations": true
+    },
+    ".v2018_3_4.UnpivotExtended": {
+        "type": "unpivot",
+        "column": [
+            "usesSmartDefaults", 
+            "unpivotGroup"
+        ],
+        "field_target": {
+            "name": {
+                "column": "unpivotGroup",
+                "path": ["literalColumn", "literalColumnName"],
+                "mode": "scalar"
+            },
+            "unpivot_columns": {
+                "column": "unpivotGroup",
+                "path": ["unpivotColumns"],
+                "mode": "explode",
+                "child_columns": {
+                    "name": {
+                        "column": "unpivotColumnName",
+                        "path": [],
+                        "mode": "scalar"
+                    },
+                    "bindings_type": {
+                        "column": "columnInformation",
+                        "path": ["bindingsType"],
+                        "mode": "scalar"
+                    },
+                    "manual_bindings": {
+                        "column": "columnInformation",
+                        "path": ["manualBindings"],
+                        "mode": "scalar"
+                    },
+                    "wildcard_type": {
+                        "column": "columnInformation",
+                        "path": ["wildcardType"],
+                        "mode": "scalar"
+                    },
+                    "wildcard_expression": {
+                        "column": "columnInformation",
+                        "path": ["wildcardExpression"],
+                        "mode": "scalar"
+                    },
+                    "additional_columns": {
+                        "column": "columnInformation",
+                        "path": ["additionalColumns"],
+                        "mode": "scalar"
+                    }
+                }
+            }
+        }
+    },
+    ".v2022_4_1.LoadExcel": {
+        "column": [
+            "connectionId",
+            "connectionAttributes",
+            "debugModeRowLimit",
+            "originalDataTypes",
+            "randomSampling",
+            "updateTimestamp",
+            "restrictedFields",
+            "userRenamedFields",
+            "selectedFields",
+            "samplingType",
+            "groupByFields",
+            "filters",
+            "relation"
+        ],
+        "fields": "list",
+        "actions": "list",
+        "annotations": false
+    },
+    ".v2022_4_1.LoadCsv": {
+        "column": [
+            "connectionId",
+            "connectionAttributes",
+            "debugModeRowLimit",
+            "originalDataTypes",
+            "randomSampling",
+            "updateTimestamp",
+            "restrictedFields",
+            "userRenamedFields",
+            "selectedFields",
+            "samplingType",
+            "groupByFields",
+            "filters",
+            "separator",
+            "locale",
+            "charSet",
+            "containsHeaders",
+            "textQualifier"
+        ],
+        "fields": "list",
+        "actions": "list",
+        "annotations": false
+    },
+    ".v2022_2_1.LoadCsvInputUnion": {
+        "column": [
+            "downgradable",
+            "connectionId",
+            "connectionAttributes",
+            "debugModeRowLimit",
+            "originalDataTypes",
+            "randomSampling",
+            "updateTimestamp",
+            "restrictedFields",
+            "userRenamedFields",
+            "selectedFields",
+            "samplingType",
+            "groupByFields",
+            "filters"
+        ],
+        "fields": "list",
+        "actions": "list",
+        "generatedInputs": "list",
+        "annotations": false
+    },
+    ".v1.WriteToHyper": {
+        "column": [
+            "hyperOutputFile",
+            "tdsOutput"
+        ],
+        "type": "output",
+        "annotations": false
+    }
+}

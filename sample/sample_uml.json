@@ -1,0 +1,1997 @@
+{
+  "e0e5fe3e-00e7-48f2-ad92-d987642bd4a9": {
+    "name": "返品",
+    "nodeType": ".v2022_4_1.LoadExcel",
+    "actions": {
+      "RemoveSourceRowNumberNodeTransform": {
+        "nodeType": ".v1.RemoveColumns",
+        "name": null,
+        "description": null,
+        "field_target": [
+          "Source Row Number"
+        ]
+      }
+    }
+  },
+  "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3": {
+    "name": "オーダー",
+    "nodeType": ".v2022_4_1.LoadExcel",
+    "actions": {
+      "RemoveSourceRowNumberNodeTransform": {
+        "nodeType": ".v1.RemoveColumns",
+        "name": null,
+        "description": null,
+        "field_target": [
+          "Source Row Number"
+        ]
+      }
+    }
+  },
+  "450a1faa-a744-401e-b05d-94bae0c31f68": {
+    "name": "結合 15",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "fbd41e2e-c3fa-45a7-b511-3be4f01d99f0": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 15",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[オーダー ID]",
+            "rightExpression": "[オーダー ID]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "e28c40d7-5fca-471f-8148-964c38e84b57": {
+    "name": "結合 13",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "fc06c2d6-eecd-47b8-b588-9555d9ec1547": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 13",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[オーダー ID]",
+            "rightExpression": "[オーダー ID]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "68beb47f-ba75-47a6-a17d-44d2d4ac2a3b": {
+    "name": "結合 11",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "880b3a80-11c5-4443-9482-017e4cfbad9a": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 11",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[オーダー ID]",
+            "rightExpression": "[オーダー ID]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "a2ab1335-d438-4a38-960f-f7c8ea62c2fc": {
+    "name": "結合 9",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "21f9c2e2-c7da-4b45-8837-f157b9bd6649": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 9",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[オーダー ID]",
+            "rightExpression": "[オーダー ID]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "e7bcbfcd-ca28-4ea4-9cc4-091268bddf4f": {
+    "name": "結合 7",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "ef88dda5-9604-41f7-9d14-7d0a0c16feed": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 7",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[オーダー ID]",
+            "rightExpression": "[オーダー ID]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "2900482f-9526-43b4-bec4-e8046511f219": {
+    "name": "結合 5",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "4400c0d4-cccb-4b42-b656-d0bbf4f0ca83": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 5",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[オーダー ID]",
+            "rightExpression": "[オーダー ID]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "840942f6-8b7c-4eb4-bc48-fba5d98a9d2f": {
+    "name": "結合 1",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "20779f43-56b3-4988-ba46-1d8ac4be2398": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 1",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[オーダー ID]",
+            "rightExpression": "[オーダー ID]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "8630ada4-c4f6-45fc-a908-2a158a44ce21": {
+    "name": "関係者",
+    "nodeType": ".v2022_4_1.LoadExcel",
+    "actions": {
+      "RemoveSourceRowNumberNodeTransform": {
+        "nodeType": ".v1.RemoveColumns",
+        "name": null,
+        "description": null,
+        "field_target": [
+          "Source Row Number"
+        ]
+      }
+    }
+  },
+  "e7fa5e9b-31d3-4e33-baca-1190a5836a07": {
+    "name": "年月マスタ",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "927cb6e0-306d-4700-a269-88cca7d66109": {
+        "nodeType": ".v2019_2_2.KeepOnlyColumns",
+        "name": "オーダー日 と 1 件のフィールドを保持 1",
+        "description": null,
+        "field_target": [
+          "オーダー日",
+          "出荷日"
+        ]
+      }
+    }
+  },
+  "e4dd2834-068d-48c9-864e-25bde686169b": {
+    "name": "bulk rename",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "0da3ee3c-9440-4721-aa8b-0c44613caee0": {
+        "nodeType": ".v2021_2_1.BulkRenameColumns",
+        "name": "フィールド名を変更 1",
+        "description": null,
+        "actions_detail": {
+          "columnsSelection": {
+            "selectionRule": {
+              "type": "containsBasedColumnsSelection",
+              "columnNameSubStr": ""
+            },
+            "includedColumns": [],
+            "exemptedColumns": []
+          },
+          "columnsOperation": {
+            "type": "replaceColumnAllSubStringOperation",
+            "existingSubString": "出荷",
+            "newSubString": "追加"
+          }
+        }
+      },
+      "6921acfd-e664-4bba-910f-adc875af981d": {
+        "nodeType": ".v2021_2_1.BulkRenameColumns",
+        "name": "フィールド名を変更 2",
+        "description": null,
+        "actions_detail": {
+          "columnsSelection": {
+            "selectionRule": {
+              "type": "containsBasedColumnsSelection",
+              "columnNameSubStr": ""
+            },
+            "includedColumns": [
+              "行 ID",
+              "オーダー日",
+              "追加モード",
+              "郵便番号",
+              "返品",
+              "顧客区分",
+              "利益",
+              "顧客 ID",
+              "オーダー ID",
+              "カテゴリ",
+              "製品 ID",
+              "追加日",
+              "サブカテゴリ",
+              "オーダー ID-1",
+              "国/地域",
+              "売上",
+              "割引率",
+              "数量",
+              "市区町村",
+              "都道府県",
+              "地域",
+              "製品名",
+              "顧客名"
+            ],
+            "exemptedColumns": []
+          },
+          "columnsOperation": {
+            "type": "addColumnPrefixOperation",
+            "columnNamePrefix": "hoge"
+          }
+        }
+      },
+      "a7884997-12ab-4ea4-b372-faa975dc9d9d": {
+        "nodeType": ".v2021_2_1.BulkRenameColumns",
+        "name": "フィールド名を変更 3",
+        "description": null,
+        "actions_detail": {
+          "columnsSelection": {
+            "selectionRule": {
+              "type": "containsBasedColumnsSelection",
+              "columnNameSubStr": ""
+            },
+            "includedColumns": [
+              "hoge行 ID",
+              "hogeオーダー日",
+              "hoge追加モード",
+              "hoge郵便番号",
+              "hoge返品",
+              "hoge顧客区分",
+              "hoge利益",
+              "hoge顧客 ID",
+              "hogeオーダー ID",
+              "hogeカテゴリ",
+              "hoge製品 ID",
+              "hoge追加日",
+              "hogeサブカテゴリ",
+              "hogeオーダー ID-1",
+              "hoge国/地域",
+              "hoge売上",
+              "hoge割引率",
+              "hoge数量",
+              "hoge市区町村",
+              "hoge都道府県",
+              "hoge地域",
+              "hoge製品名",
+              "hoge顧客名"
+            ],
+            "exemptedColumns": []
+          },
+          "columnsOperation": {
+            "type": "replaceColumnAllSubStringOperation",
+            "existingSubString": "hoge",
+            "newSubString": ""
+          }
+        }
+      },
+      "dade14cd-51b0-4200-a139-d432dbbd4ffa": {
+        "nodeType": ".v2021_2_1.BulkRenameColumns",
+        "name": "フィールド名を変更 4",
+        "description": null,
+        "actions_detail": {
+          "columnsSelection": {
+            "selectionRule": {
+              "type": "containsBasedColumnsSelection",
+              "columnNameSubStr": ""
+            },
+            "includedColumns": [
+              "追加日",
+              "割引率",
+              "地域",
+              "製品名",
+              "製品 ID",
+              "顧客 ID",
+              "郵便番号",
+              "利益",
+              "オーダー ID",
+              "カテゴリ",
+              "市区町村",
+              "顧客区分",
+              "オーダー日",
+              "売上",
+              "数量",
+              "都道府県",
+              "サブカテゴリ",
+              "オーダー ID-1",
+              "顧客名",
+              "追加モード",
+              "国/地域",
+              "行 ID",
+              "返品"
+            ],
+            "exemptedColumns": []
+          },
+          "columnsOperation": {
+            "type": "addColumnSuffixOperation",
+            "columnNameSuffix": "huga"
+          }
+        }
+      },
+      "af5446b3-d021-475b-ac08-5f44bafaa675": {
+        "nodeType": ".v2021_2_1.BulkRenameColumns",
+        "name": "フィールド名を変更 5",
+        "description": null,
+        "actions_detail": {
+          "columnsSelection": {
+            "selectionRule": {
+              "type": "containsBasedColumnsSelection",
+              "columnNameSubStr": ""
+            },
+            "includedColumns": [
+              "製品 IDhuga",
+              "割引率huga",
+              "市区町村huga",
+              "オーダー ID-1huga",
+              "郵便番号huga",
+              "都道府県huga",
+              "顧客 IDhuga",
+              "地域huga",
+              "売上huga",
+              "顧客区分huga",
+              "行 IDhuga",
+              "オーダー日huga",
+              "サブカテゴリhuga",
+              "追加モードhuga",
+              "国/地域huga",
+              "オーダー IDhuga",
+              "利益huga",
+              "追加日huga",
+              "カテゴリhuga",
+              "顧客名huga",
+              "製品名huga",
+              "数量huga",
+              "返品huga"
+            ],
+            "exemptedColumns": []
+          },
+          "columnsOperation": {
+            "type": "replaceColumnAllSubStringOperation",
+            "existingSubString": "追加",
+            "newSubString": "登録"
+          }
+        }
+      },
+      "98e7ea93-b361-4fb2-8279-3e86af764e04": {
+        "nodeType": ".v2021_2_1.BulkRenameColumns",
+        "name": "フィールド名を変更 6",
+        "description": null,
+        "actions_detail": {
+          "columnsSelection": {
+            "selectionRule": {
+              "type": "containsBasedColumnsSelection",
+              "columnNameSubStr": ""
+            },
+            "includedColumns": [
+              "製品 IDhuga",
+              "割引率huga",
+              "登録日huga",
+              "市区町村huga",
+              "オーダー ID-1huga",
+              "郵便番号huga",
+              "都道府県huga",
+              "顧客 IDhuga",
+              "登録モードhuga",
+              "地域huga",
+              "売上huga",
+              "顧客区分huga",
+              "行 IDhuga",
+              "オーダー日huga",
+              "サブカテゴリhuga",
+              "国/地域huga",
+              "オーダー IDhuga",
+              "利益huga",
+              "カテゴリhuga",
+              "顧客名huga",
+              "製品名huga",
+              "数量huga",
+              "返品huga"
+            ],
+            "exemptedColumns": []
+          },
+          "columnsOperation": {
+            "type": "replaceColumnAllSubStringOperation",
+            "existingSubString": "huga",
+            "newSubString": ""
+          }
+        }
+      }
+    }
+  },
+  "8b887871-1647-4aeb-89ac-7d759316eefd": {
+    "name": "結合 3",
+    "nodeType": ".v2018_2_3.SuperJoin",
+    "before": {},
+    "actions": {
+      "fd73a029-663d-417c-9e1c-bb2f19c6f7b4": {
+        "nodeType": ".v1.SimpleJoin",
+        "name": "結合 3",
+        "description": null,
+        "conditions": [
+          {
+            "leftExpression": "[地域]",
+            "rightExpression": "[地域]",
+            "comparator": "=="
+          }
+        ]
+      }
+    },
+    "after": {}
+  },
+  "0c326805-7f1f-4e34-bfb9-e017365da47a": {
+    "name": "1つのフィールドからの値_1",
+    "nodeType": ".v2021_3_1.SuperNewRows",
+    "before": {},
+    "actions": {
+      "5da36b4b-5f00-4f01-a588-5784144f10f9": {
+        "nodeType": ".v2021_3_1.NewRows",
+        "name": "新しい行 1",
+        "description": null,
+        "actions_detail": {
+          "newRowsGenerator": {
+            "generatorType": "newRowsOneColumnGenerator",
+            "newColumnName": null,
+            "columnName": "オーダー日",
+            "start": null,
+            "end": null
+          },
+          "step": {
+            "stepType": "newRowsDateStep",
+            "step": 1,
+            "period": "DAY"
+          },
+          "globalDefaultValue": "ZERO"
+        }
+      }
+    },
+    "after": {}
+  },
+  "57cc3d41-85e6-43f7-871c-f6363ae27fb8": {
+    "name": "1つのフィールドからの値_2",
+    "nodeType": ".v2021_3_1.SuperNewRows",
+    "before": {},
+    "actions": {
+      "81c14845-f261-4a4c-98d3-e59074e22c9f": {
+        "nodeType": ".v2021_3_1.NewRows",
+        "name": "新しい行 2",
+        "description": null,
+        "actions_detail": {
+          "newRowsGenerator": {
+            "generatorType": "newRowsOneColumnGenerator",
+            "newColumnName": null,
+            "columnName": "オーダー日",
+            "start": "1641168000000",
+            "end": "1740960000000"
+          },
+          "step": {
+            "stepType": "newRowsDateStep",
+            "step": 1,
+            "period": "WEEK"
+          },
+          "globalDefaultValue": "NULL"
+        }
+      }
+    },
+    "after": {}
+  },
+  "afe35c99-dd01-439b-827f-58fa0072b208": {
+    "name": "1つのフィールドからの値_3",
+    "nodeType": ".v2021_3_1.SuperNewRows",
+    "before": {},
+    "actions": {
+      "c25537ca-abfb-4d63-88a7-22d1ea187522": {
+        "nodeType": ".v2021_3_1.NewRows",
+        "name": "新しい行 3",
+        "description": null,
+        "actions_detail": {
+          "newRowsGenerator": {
+            "generatorType": "newRowsOneColumnGenerator",
+            "newColumnName": null,
+            "columnName": "オーダー日",
+            "start": null,
+            "end": null
+          },
+          "step": {
+            "stepType": "newRowsDateStep",
+            "step": 1,
+            "period": "MONTH"
+          },
+          "globalDefaultValue": "LAST"
+        }
+      }
+    },
+    "after": {}
+  },
+  "3527965a-41dd-4490-850a-9ca90cba995b": {
+    "name": "2つのフィールドからの値の範囲_1",
+    "nodeType": ".v2021_3_1.SuperNewRows",
+    "before": {},
+    "actions": {
+      "59347079-4363-437c-abe5-194c1113ea53": {
+        "nodeType": ".v2021_3_1.NewRows",
+        "name": "新しい行 4",
+        "description": null,
+        "actions_detail": {
+          "newRowsGenerator": {
+            "generatorType": "newRowsTwoColumnGenerator",
+            "newColumnName": "NewRows1",
+            "startColumn": "オーダー日",
+            "endColumn": "出荷日"
+          },
+          "step": {
+            "stepType": "newRowsDateStep",
+            "step": 1,
+            "period": "DAY"
+          },
+          "globalDefaultValue": "ZERO"
+        }
+      }
+    },
+    "after": {}
+  },
+  "06987dce-1cac-44ed-a2a0-ec46acbe1036": {
+    "name": "型変換",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "2501cb67-853c-4dfd-8a1a-b67bdca4bbd4": {
+        "nodeType": ".v1.ChangeColumnType",
+        "name": "地域-1 を 数値 (小数) に変更 1",
+        "description": null,
+        "actions_detail": {
+          "fields": {
+            "地域-1": {
+              "type": "real",
+              "calc": null
+            }
+          }
+        }
+      },
+      "fd078ab4-97c0-45e2-9fdd-74070bf47941": {
+        "nodeType": ".v1.ChangeColumnType",
+        "name": "地域マネージャー を 数値 (整数) に変更 1",
+        "description": null,
+        "actions_detail": {
+          "fields": {
+            "地域マネージャー": {
+              "type": "integer",
+              "calc": null
+            }
+          }
+        }
+      },
+      "2b906e36-d9a4-4011-9de4-1f289db9c604": {
+        "nodeType": ".v1.ChangeColumnType",
+        "name": "オーダー日 を 日付と時刻 に変更 1",
+        "description": null,
+        "actions_detail": {
+          "fields": {
+            "オーダー日": {
+              "type": "datetime",
+              "calc": null
+            }
+          }
+        }
+      },
+      "2bc40a90-3044-406a-9fea-29eca01d099b": {
+        "nodeType": ".v1.ChangeColumnType",
+        "name": "行 ID を 文字列 に変更 1",
+        "description": null,
+        "actions_detail": {
+          "fields": {
+            "行 ID": {
+              "type": "string",
+              "calc": null
+            }
+          }
+        }
+      },
+      "b4c63ce2-f7ed-440d-9da1-1f596be50198": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 製品名 to url 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "製品名",
+          "semanticRole": {
+            "id": "global/resource/url",
+            "name": "url",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "6d60d5e6-dcc5-41c9-b477-74ff215a2113": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 地域 to airport 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "地域",
+          "semanticRole": {
+            "id": "global/geo/airport",
+            "name": "airport",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "a7c754be-a70a-4eee-aad5-df113634bf0b": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 国/地域 to area_code 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "国/地域",
+          "semanticRole": {
+            "id": "global/geo/area_code",
+            "name": "area_code",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "9761e800-98c2-4e45-bd7a-f0a3c024d65d": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 都道府県 to city 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "都道府県",
+          "semanticRole": {
+            "id": "global/geo/city",
+            "name": "city",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "942bc6ca-d7d8-4a29-a464-446a1d29eafa": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 市区町村 to CBSA_MSA 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "市区町村",
+          "semanticRole": {
+            "id": "global/geo/CBSA_MSA",
+            "name": "CBSA_MSA",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "a77932b0-b175-480e-93c1-62ada2abfe49": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 顧客区分 to congress_district 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客区分",
+          "semanticRole": {
+            "id": "global/geo/congress_district",
+            "name": "congress_district",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "0b6b7c34-2757-4b0a-8556-22c4eb2f2cd6": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 顧客名 to country 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客名",
+          "semanticRole": {
+            "id": "global/geo/country",
+            "name": "country",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "cc184e77-5372-4f8f-b6d6-52b82ba78802": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 顧客 ID to county 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客 ID",
+          "semanticRole": {
+            "id": "global/geo/county",
+            "name": "county",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "8da442a5-bac3-44de-a799-43dd83dde484": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 出荷モード to NUTS 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷モード",
+          "semanticRole": {
+            "id": "global/geo/NUTS",
+            "name": "NUTS",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "7def55b1-d53b-4ac1-8eeb-77cabef230a8": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change 出荷日 to postal_code 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "semanticRole": {
+            "id": "global/geo/postal_code",
+            "name": "postal_code",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "b237971f-2034-465c-b1e9-e7e01f37ba35": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change オーダー日 to state 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "オーダー日",
+          "semanticRole": {
+            "id": "global/geo/state",
+            "name": "state",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      },
+      "19cd8912-7809-4445-98a3-8daef56d90f1": {
+        "nodeType": ".v2019_3_1.ChangeSemanticRole",
+        "name": "change オーダー ID to email 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "オーダー ID",
+          "semanticRole": {
+            "id": "global/contactInfo/email",
+            "name": "email",
+            "serverUrl": null,
+            "siteName": null,
+            "detailsUrl": null
+          }
+        }
+      }
+    }
+  },
+  "6854962c-e502-4f53-9b24-c5402c38b6d4": {
+    "name": "マージ",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "9aaa361e-bc92-4d29-8a57-1a4f21e74566": {
+        "nodeType": ".v1.MergeColumns",
+        "name": "フィールドのマージ: オーダー ID 1",
+        "description": null,
+        "from": [
+          "オーダー ID-1"
+        ],
+        "to": "オーダー ID"
+      }
+    }
+  },
+  "9fc1d41c-0088-4320-b165-58c34597c218": {
+    "name": "ユニオン 1",
+    "nodeType": ".v2018_2_3.SuperUnion",
+    "before": {},
+    "actions": {
+      "ac849025-db33-4867-a93c-1544eacc2149": {
+        "nodeType": ".v1.SimpleUnion",
+        "name": "ユニオン 1",
+        "description": null,
+        "new_column": "Table Names"
+      }
+    },
+    "after": {}
+  },
+  "11f00cb8-c62d-40bb-bfa1-f3a673bc6399": {
+    "name": "日付_文字列_数値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "7d8f5bd3-958c-4fcb-b97b-f2e1c22c4b27": {
+        "nodeType": ".v2019_2_2.KeepOnlyColumns",
+        "name": "出荷日 と 2 件のフィールドを保持 1",
+        "description": null,
+        "field_target": [
+          "出荷日",
+          "顧客名",
+          "数量"
+        ]
+      }
+    }
+  },
+  "183812e1-a0a7-4bbc-8748-60fc99249491": {
+    "name": "行から列",
+    "nodeType": ".v2018_3_3.SuperPivot",
+    "before": {},
+    "actions": {
+      "2d4a60fa-0707-482f-a448-3722d8b9e9ba": {
+        "nodeType": ".v2018_3_3.Pivot",
+        "name": "name 1",
+        "description": null,
+        "actions_detail": {
+          "defaultAggregation": "SUM",
+          "aggregateColumnName": "売上",
+          "pivotColumnName": "カテゴリ",
+          "pivotGroupingColumns": [],
+          "newPivotColumns": [
+            {
+              "newColumnName": "テクノロジー"
+            },
+            {
+              "newColumnName": "家具"
+            },
+            {
+              "newColumnName": "事務用品"
+            }
+          ]
+        }
+      }
+    },
+    "after": {}
+  },
+  "800ae5b5-0e35-41da-bf3e-5c5f45dd1a13": {
+    "name": "ワイルドカードあり",
+    "nodeType": ".v2018_3_4.SuperUnpivotExtended",
+    "before": {},
+    "actions": {
+      "ba3f05f6-c203-4a46-95d6-9b00caf57595": {
+        "nodeType": ".v2018_3_4.UnpivotExtended",
+        "name": "ピボット 2",
+        "description": null,
+        "actions_detail": {
+          "usesSmartDefaults": true,
+          "unpivotGroup": {
+            "literalColumn": {
+              "literals": [],
+              "literalColumnName": "ピボット1 の名前",
+              "names": []
+            },
+            "unpivotColumns": [
+              {
+                "unpivotColumnName": "ピボット 1 の値",
+                "columnInformation": {
+                  "bindingsType": "wildcard",
+                  "wildcardType": "Contains",
+                  "wildcardExpression": "オーダー",
+                  "additionalColumns": []
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "after": {}
+  },
+  "62929353-9ccd-4694-8770-6982231e59c8": {
+    "name": "ワイルドカードなし",
+    "nodeType": ".v2018_3_4.SuperUnpivotExtended",
+    "before": {},
+    "actions": {
+      "4c7b8ddb-5711-4c12-a9da-e73234774f86": {
+        "nodeType": ".v2018_3_4.UnpivotExtended",
+        "name": "ピボット 1",
+        "description": null,
+        "actions_detail": {
+          "usesSmartDefaults": true,
+          "unpivotGroup": {
+            "literalColumn": {
+              "literals": [],
+              "literalColumnName": "ピボット1 の名前",
+              "names": []
+            },
+            "unpivotColumns": [
+              {
+                "unpivotColumnName": "ピボット 1 の値",
+                "columnInformation": {
+                  "bindingsType": "wildcard",
+                  "wildcardType": "Contains",
+                  "wildcardExpression": "",
+                  "additionalColumns": [
+                    "オーダー ID",
+                    "オーダー ID-1",
+                    "売上"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "after": {}
+  },
+  "867eb82f-74af-4e4c-bcb8-89164e00685f": {
+    "name": "集計 1",
+    "nodeType": ".v2018_2_3.SuperAggregate",
+    "before": {},
+    "actions": {
+      "5c1b2812-d43f-4ae4-8eb7-2a7500b5ee1f": {
+        "nodeType": ".v1.Aggregate",
+        "name": "集計 1",
+        "description": null,
+        "actions_detail": {
+          "groupByFields": [
+            {
+              "columnName": "オーダー ID",
+              "function": "GroupBy",
+              "newColumnName": null,
+              "specialFieldType": null
+            },
+            {
+              "columnName": "サブカテゴリ",
+              "function": "GroupBy",
+              "newColumnName": null,
+              "specialFieldType": null
+            }
+          ],
+          "aggregateFields": [
+            {
+              "columnName": "割引率",
+              "function": "SUM",
+              "newColumnName": null,
+              "specialFieldType": null
+            },
+            {
+              "columnName": "顧客名",
+              "function": "COUNTD",
+              "newColumnName": null,
+              "specialFieldType": null
+            }
+          ]
+        }
+      }
+    },
+    "after": {
+      "053dfd80-dfe1-48ce-ac94-e205672647cc": {
+        "nodeType": ".v1.FilterOperation",
+        "name": "フィルター",
+        "description": null,
+        "actions_detail": {
+          "filterExpression": "[顧客名]=1"
+        }
+      }
+    }
+  },
+  "e9dce887-d1ed-4326-a3c5-138e077db0d9": {
+    "name": "ユニオン 3",
+    "nodeType": ".v2018_2_3.SuperUnion",
+    "before": {},
+    "actions": {
+      "6e193fd6-d4d2-4e34-9610-20d358040cd9": {
+        "nodeType": ".v1.SimpleUnion",
+        "name": "ユニオン 3",
+        "description": null,
+        "new_column": "Table Names"
+      }
+    },
+    "after": {}
+  },
+  "454ccffc-b37c-4465-9c2c-c972f216d80d": {
+    "name": "日付",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "323f9caa-d1e0-4917-a9af-80c4ce039e24": {
+        "nodeType": ".v1.RemoveColumns",
+        "name": "顧客名 と 1 件のフィールドを削除 1",
+        "description": null,
+        "field_target": [
+          "顧客名",
+          "数量"
+        ]
+      }
+    }
+  },
+  "8c0d4825-d121-4d7b-ba60-7a2827eae1dc": {
+    "name": "文字列",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "b1caf7dc-0a9b-467e-8563-0abcbab4cb2c": {
+        "nodeType": ".v1.RemoveColumns",
+        "name": "出荷日 と 1 件のフィールドを削除 1",
+        "description": null,
+        "field_target": [
+          "出荷日",
+          "数量"
+        ]
+      }
+    }
+  },
+  "5dd4e6df-23a7-4f8b-a8b2-dc7e8925b14c": {
+    "name": "数値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "6348849d-1496-4023-b963-94845e5727f5": {
+        "nodeType": ".v2019_2_2.KeepOnlyColumns",
+        "name": "保持: 数量 1",
+        "description": null,
+        "field_target": [
+          "数量"
+        ]
+      }
+    }
+  },
+  "a00400f8-b30e-4743-bf04-7246d5c37751": {
+    "name": "日付の変換",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "b69a3cf1-1efe-4ed6-9678-56f2b72c5a9f": {
+        "nodeType": ".v2019_1_4.Remap",
+        "name": "クリーニング 2",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "values": {
+            "DATE(#2022-01-16#)": [
+              "DATE(#2022-01-16#)",
+              "DATE(#2022-01-07#)",
+              "DATE(#2022-01-08#)",
+              "DATE(#2022-01-10#)",
+              "DATE(#2022-01-12#)",
+              "DATE(#2022-01-13#)",
+              "DATE(#2022-01-14#)",
+              "DATE(#2022-01-15#)"
+            ]
+          },
+          "groupMethodProps": null,
+          "fieldId": ""
+        }
+      },
+      "fe6a3e38-10aa-42fc-8c24-686289a0b4a3": {
+        "nodeType": ".v1.ChangeColumnType",
+        "name": "出荷日 を 日付と時刻 に変更 1",
+        "description": null,
+        "actions_detail": {
+          "fields": {
+            "出荷日": {
+              "type": "datetime",
+              "calc": null
+            }
+          }
+        }
+      },
+      "0887931c-c864-49dc-b00b-8ef77b19a0c9": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 出荷日 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1": "[出荷日]"
+      },
+      "841982fb-4cde-4b56-83bd-9dd2b4d7976c": {
+        "nodeType": ".v2020_1_4.QuickDateCalcColumn",
+        "name": "日付の変換 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日": "DATEPART('year', [出荷日])"
+      },
+      "611c3648-371b-4779-bac0-1f7d84ecbc8c": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 出荷日-1 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1": "[出荷日-1]"
+      },
+      "4bdecdbf-45ab-4606-a4eb-bb4ea27a885a": {
+        "nodeType": ".v1.AddColumn",
+        "name": "重複行の特定 1",
+        "description": "1 個のフィールドで重複する値を含む行を特定し、最初に出現した行には一意ラベル、それ以降の行には重複ラベルを付けます。",
+        "namespace": "Default",
+        "重複する行はありますか?": "IF ({PARTITION [出荷日-1-1]:  { ORDERBY [出荷日] DESC:  ROW_NUMBER() } } = 1) THEN '一意' ELSE '重複' END"
+      },
+      "368b785f-0864-439f-b2b5-de2b917aa8f8": {
+        "nodeType": ".v1.RemoveColumns",
+        "name": "「重複する行はありますか?」を削除してください 1",
+        "description": null,
+        "field_target": [
+          "重複する行はありますか?"
+        ]
+      },
+      "23f30eb7-85f5-46b9-9259-c090d1bb2291": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 出荷日-1-1 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1": "[出荷日-1-1]"
+      },
+      "a5d2c0ad-ce4d-4ce9-a058-7c223224fcef": {
+        "nodeType": ".v2020_1_4.QuickDateCalcColumn",
+        "name": "日付の変換 2",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1": "DATEPART('quarter', [出荷日-1])"
+      },
+      "a1e31280-7478-4d15-a0ea-880becabfa6f": {
+        "nodeType": ".v2020_1_4.QuickDateCalcColumn",
+        "name": "日付の変換 3",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1": "DATEPART('month', [出荷日-1-1])"
+      },
+      "9fb82cb2-a63b-4402-b121-ad60a1de3577": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 出荷日-1-1-1 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1": "[出荷日-1-1-1]"
+      },
+      "a44ee2ed-2fc5-4512-9f7f-3c8cfd6925ac": {
+        "nodeType": ".v2021_1_4.QuickDateNameCalcColumn",
+        "name": "日付の変換 4",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1": "DATENAME('month', [出荷日-1-1-1])"
+      },
+      "56bf9bc3-dd7a-4ade-9c75-16a88ac2f73f": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 出荷日-1-1-1-1 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1-1": "[出荷日-1-1-1-1]"
+      },
+      "f1bf9180-4ce7-455e-bc39-91ef2642cdd3": {
+        "nodeType": ".v2020_1_4.QuickDateCalcColumn",
+        "name": "日付の変換 5",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1": "DATEPART('week', [出荷日-1-1-1-1])"
+      },
+      "1b370ea4-c182-49a2-8253-d7cd4c6079d3": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 出荷日-1-1-1-1-1 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1-1-1": "[出荷日-1-1-1-1-1]"
+      },
+      "5f30df01-a305-4a48-98c6-119676712217": {
+        "nodeType": ".v2021_1_4.QuickDateNameCalcColumn",
+        "name": "日付の変換 6",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1-1": "DATENAME('weekday', [出荷日-1-1-1-1-1])"
+      },
+      "a1ef236d-a930-4295-b992-741480420cc7": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 出荷日-1-1-1-1-1-1 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1-1-1-1": "[出荷日-1-1-1-1-1-1]"
+      },
+      "fc2855a8-78d6-42dd-8853-28ca60246bc5": {
+        "nodeType": ".v2020_1_4.QuickDateCalcColumn",
+        "name": "日付の変換 7",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1-1-1": "DATEPART('day', [出荷日-1-1-1-1-1-1])"
+      },
+      "a5879a34-18b4-4ef8-ba93-79bda99afec8": {
+        "nodeType": ".v2020_3_3.CustomFiscalYearCalcColumn",
+        "name": "カスタム会計年度 1",
+        "description": null,
+        "namespace": "Default",
+        "出荷日-1-1-1-1-1-1-1": "IF MONTH([出荷日-1-1-1-1-1-1-1]) -3> 0\nTHEN MONTH([出荷日-1-1-1-1-1-1-1]) -3\nELSE MONTH([出荷日-1-1-1-1-1-1-1]) + 9\nEND"
+      }
+    }
+  },
+  "8d10d350-d548-482b-9ba2-3b00e64a8388": {
+    "name": "計算",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "5de7d6f5-8821-4116-afa7-ab71205aba93": {
+        "nodeType": ".v1.FilterOperation",
+        "name": "フィルター",
+        "description": null,
+        "actions_detail": {
+          "filterExpression": "[出荷日]>=date('2025-01-01')"
+        }
+      }
+    }
+  },
+  "89daaf2c-986d-445e-81bb-d296ceaa8b00": {
+    "name": "相対日付",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "a11b9037-1aca-43f7-a1b0-230a1b8f6c9f": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 0.0,
+          "filterSelection": 3.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": true,
+          "timeIntervalAnchor": "1776226107519",
+          "isIncludingNullValues": true
+        }
+      }
+    }
+  },
+  "300f8c7f-03a3-40ae-8316-616347570a2e": {
+    "name": "NULL値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "1530d052-948c-4860-8dd7-5957df2ce7d4": {
+        "nodeType": ".v2018_2_1.RichNullFilter",
+        "name": "RichNullFilter 1",
+        "description": null,
+        "actions_detail": {
+          "filter": 2.0,
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日"
+        }
+      },
+      "53db6792-9085-46fc-8dbc-24e220a96e72": {
+        "nodeType": ".v2018_2_1.RichNullFilter",
+        "name": "RichNullFilter 2",
+        "description": null,
+        "actions_detail": {
+          "filter": 1.0,
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日"
+        }
+      }
+    }
+  },
+  "482dcf03-93dc-4ef6-9b24-6d79dc8a2013": {
+    "name": "日付の範囲",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "ae2593a3-c0a3-4376-8ce6-8a7aee21804f": {
+        "nodeType": ".v1.RichRangeFilter",
+        "name": "RichRangeFilter 1",
+        "description": null,
+        "actions_detail": {
+          "richRangeType": 0.0,
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "includeNulls": true,
+          "appliedMin": "1641513600000",
+          "appliedMax": "1767571200000",
+          "minimumValue": "1641513600000",
+          "maximumValue": "1767571200000",
+          "dataType": "date"
+        }
+      },
+      "bfe3150a-bb56-44e4-a13e-c27e6d6343c9": {
+        "nodeType": ".v1.RichRangeFilter",
+        "name": "RichRangeFilter 2",
+        "description": null,
+        "actions_detail": {
+          "richRangeType": 2.0,
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "includeNulls": false,
+          "appliedMin": "1641513600000",
+          "appliedMax": "1767571200000",
+          "minimumValue": "1641513600000",
+          "maximumValue": "1767571200000",
+          "dataType": "date"
+        }
+      },
+      "a4283b1d-7622-4d79-8712-16da9a538194": {
+        "nodeType": ".v1.RichRangeFilter",
+        "name": "RichRangeFilter 3",
+        "description": null,
+        "actions_detail": {
+          "richRangeType": 1.0,
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "includeNulls": false,
+          "appliedMin": "1641513600000",
+          "appliedMax": "1767571200000",
+          "minimumValue": "1641513600000",
+          "maximumValue": "1767571200000",
+          "dataType": "date"
+        }
+      }
+    }
+  },
+  "d2d884c0-c199-4ab7-873f-4acdfadbed7c": {
+    "name": "選択した値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "0c66b13f-4d22-4999-9c4d-593d1270f798": {
+        "nodeType": ".v2019_3_2.RichDiscreteValueFilter",
+        "name": "RichDiscreteValueFilter 1",
+        "description": null,
+        "actions_detail": {
+          "exclude": false,
+          "values": {
+            "出荷日": [
+              "DATE(#2022-01-07#)",
+              "DATE(#2022-01-12#)",
+              "DATE(#2022-01-15#)",
+              "DATE(#2022-02-12#)",
+              "DATE(#2022-01-26#)",
+              "DATE(#2022-01-27#)",
+              "DATE(#2022-01-28#)",
+              "DATE(#2022-01-29#)",
+              "DATE(#2022-01-31#)",
+              "DATE(#2022-02-02#)",
+              "DATE(#2022-02-03#)",
+              "DATE(#2022-02-04#)",
+              "DATE(#2022-02-06#)",
+              "DATE(#2022-02-08#)",
+              "DATE(#2022-02-09#)",
+              "DATE(#2022-02-10#)"
+            ]
+          },
+          "datatype": "date",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "outOfSampleValues": null
+        }
+      },
+      "ac4452dd-0bf7-4341-adb8-bdf79fe32bf8": {
+        "nodeType": ".v2019_3_2.RichDiscreteValueFilter",
+        "name": "RichDiscreteValueFilter 2",
+        "description": null,
+        "actions_detail": {
+          "exclude": true,
+          "values": {
+            "出荷日": [
+              "DATE(#2022-01-07#)",
+              "DATE(#2022-01-31#)",
+              "DATE(#2022-01-26#)",
+              "DATE(#2022-01-27#)",
+              "DATE(#2022-01-28#)",
+              "DATE(#2022-01-29#)"
+            ]
+          },
+          "datatype": "date",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "outOfSampleValues": null
+        }
+      }
+    }
+  },
+  "898e48c8-1af7-4539-b3fa-02921fb1441b": {
+    "name": "重複行の特定",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "873684c8-a1bc-4656-8790-fbf22eec42a0": {
+        "nodeType": ".v1.AddColumn",
+        "name": "重複行の特定 2",
+        "description": "1 個のフィールドで重複する値を含む行を特定し、最初に出現した行には一意ラベル、それ以降の行には重複ラベルを付けます。",
+        "namespace": "Default",
+        "重複する行はありますか?": "IF ({PARTITION [出荷日]:  { ORDERBY [出荷日] DESC:  ROW_NUMBER() } } = 1) THEN '一意' ELSE '重複' END"
+      }
+    }
+  },
+  "641960f3-ca8e-476e-a8ce-cc50198910e3": {
+    "name": "NULL値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "6f210ace-aa82-44d0-ae8b-ca456a80d0ef": {
+        "nodeType": ".v2018_2_1.RichNullFilter",
+        "name": "RichNullFilter 3",
+        "description": null,
+        "actions_detail": {
+          "filter": 2.0,
+          "columnName": "顧客名",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名"
+        }
+      },
+      "f791486e-ad7e-4096-bf3f-50efdc726b87": {
+        "nodeType": ".v2018_2_1.RichNullFilter",
+        "name": "RichNullFilter 4",
+        "description": null,
+        "actions_detail": {
+          "filter": 1.0,
+          "columnName": "顧客名",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名"
+        }
+      }
+    }
+  },
+  "ac15d838-96bc-4c03-b955-5c4bb00ffeea": {
+    "name": "ワイルドカード一致",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "c1863608-ea9f-4dbb-80a0-c550c927d481": {
+        "nodeType": ".v2018_2_1.RichWildcardFilter",
+        "name": "RichWildcardFilter 1",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客名",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名",
+          "excludeMatchingValues": true,
+          "text": "安",
+          "filterType": 1.0
+        }
+      },
+      "bd7dabc7-a6b6-48e3-9d68-0214510076f4": {
+        "nodeType": ".v2018_2_1.RichWildcardFilter",
+        "name": "RichWildcardFilter 2",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客名",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名",
+          "excludeMatchingValues": true,
+          "text": "稲",
+          "filterType": 2.0
+        }
+      },
+      "21944e31-c87a-4914-b3e0-45ece371eb3d": {
+        "nodeType": ".v2018_2_1.RichWildcardFilter",
+        "name": "RichWildcardFilter 3",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客名",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名",
+          "excludeMatchingValues": false,
+          "text": "子",
+          "filterType": 3.0
+        }
+      },
+      "8e747c1d-d176-4f1e-b684-b324ca59543b": {
+        "nodeType": ".v2018_2_1.RichWildcardFilter",
+        "name": "RichWildcardFilter 4",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客名",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名",
+          "excludeMatchingValues": false,
+          "text": "好川 雪子",
+          "filterType": 4.0
+        }
+      }
+    }
+  },
+  "af7bb6ad-e974-450f-b5f2-d319d0d2f451": {
+    "name": "選択した値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "47090a33-acb9-400c-a29c-6adbfc115f7f": {
+        "nodeType": ".v2019_3_2.RichDiscreteValueFilter",
+        "name": "RichDiscreteValueFilter 3",
+        "description": null,
+        "actions_detail": {
+          "exclude": false,
+          "values": {
+            "顧客名": [
+              "\"阿久 進\"",
+              "\"阿久井 真一\"",
+              "\"阿久津 大輝\"",
+              "\"阿藤 真\"",
+              "\"阿波根 克己\"",
+              "\"阿彦 法子\""
+            ]
+          },
+          "datatype": "string",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名",
+          "outOfSampleValues": null
+        }
+      },
+      "ba608161-39b4-4028-9dae-11c3a444e87e": {
+        "nodeType": ".v2019_3_2.RichDiscreteValueFilter",
+        "name": "RichDiscreteValueFilter 4",
+        "description": null,
+        "actions_detail": {
+          "exclude": true,
+          "values": {
+            "顧客名": [
+              "\"阿久 進\"",
+              "\"阿久津 大輝\""
+            ]
+          },
+          "datatype": "string",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-顧客名",
+          "outOfSampleValues": null
+        }
+      }
+    }
+  },
+  "bd47d56a-2f2c-4207-8f8b-8cbad7af3723": {
+    "name": "文字列のクリーニング",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "bd5fdb43-640c-4925-ad2a-338040f308b6": {
+        "nodeType": ".v2019_2_3.DuplicateColumn",
+        "name": "フィールド 顧客名 を複製 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名-1": "[顧客名]"
+      },
+      "561304a6-bed2-4779-908b-14fd91295c10": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名": "UPPER([顧客名])"
+      },
+      "a1ed5783-5adc-4a55-a101-2bf00d406529": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 2",
+        "description": null,
+        "namespace": "Default",
+        "顧客名-1": "LOWER([顧客名-1])"
+      },
+      "4c77615c-03a8-478e-af42-ec4e44603627": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 3",
+        "description": null,
+        "namespace": "Default",
+        "顧客名": "PROPER([顧客名])"
+      },
+      "fb776f0d-8ecc-4f43-b6b8-dec926f73f76": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 4",
+        "description": null,
+        "namespace": "Default",
+        "顧客名": "REGEXP_REPLACE([顧客名], '[[:alpha:]]', '')"
+      },
+      "dd622ecf-7a61-479d-af54-caf0fd84b0d6": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 5",
+        "description": null,
+        "namespace": "Default",
+        "顧客名-1": "REGEXP_REPLACE([顧客名-1], '[[:digit:]]', '')"
+      },
+      "dfb08901-1c9f-4444-902e-e32434a8ed97": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 6",
+        "description": null,
+        "namespace": "Default",
+        "顧客名-1": "REGEXP_REPLACE([顧客名-1], '[[:punct:]]', '')"
+      },
+      "0da4be46-4c82-4ba5-82b6-0ee6d74aef7f": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 7",
+        "description": null,
+        "namespace": "Default",
+        "顧客名-1": "REGEXP_REPLACE([顧客名-1], '(^[[:space:]]*|[[:space:]]*$)', '')"
+      },
+      "65bc812d-bd85-4f0d-a9e1-4e8efedfffb1": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 8",
+        "description": null,
+        "namespace": "Default",
+        "顧客名-1": "TRIM(REGEXP_REPLACE([顧客名-1], '[[:space:]]+', ' '))"
+      },
+      "18866873-d9ee-4e33-9e95-771085fda1c1": {
+        "nodeType": ".v2024_2_0.QuickCalcColumn",
+        "name": "Quick Calc 9",
+        "description": null,
+        "namespace": "Default",
+        "顧客名-1": "REGEXP_REPLACE([顧客名-1], '[[:space:]]', '')"
+      }
+    }
+  },
+  "c5103a67-9f03-4147-a96c-46774a928d74": {
+    "name": "値のグループ",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "6ce1a12c-d15f-47ad-92b9-1f1b41f4e3f1": {
+        "nodeType": ".v2019_1_4.Remap",
+        "name": "クリーニング 2",
+        "description": null,
+        "actions_detail": {
+          "columnName": "顧客名",
+          "values": {
+            "\"磯上 陽子\"": [
+              "\"磯上 陽子\"",
+              "\"伊勢田 寛\"",
+              "\"伊豆田 梅子\"",
+              "\"伊良部 美羽\"",
+              "\"井ノ口 誠\"",
+              "\"井狩 海斗\"",
+              "\"井村 梅子\"",
+              "\"井東 寛\"",
+              "\"井藤 修\""
+            ]
+          },
+          "groupMethodProps": null,
+          "fieldId": ""
+        }
+      }
+    }
+  },
+  "2754cde0-139b-40ba-8410-b6755bf18336": {
+    "name": "値の分割",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "afb44033-09e0-435a-b1e6-d8c0e7da7c6f": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 1 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 1": "TRIM( SPLIT( [顧客名], \" \", 1 ) )"
+      },
+      "56c461a2-a356-4a00-b295-6e24fa06a275": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 2 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 2": "TRIM( SPLIT( [顧客名], \" \", 2 ) )"
+      },
+      "e4fbc6ec-0ea6-4ef6-a0f6-65c770a2435b": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 3 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 3": "TRIM( SPLIT( [顧客名], \"-\", 1 ) )"
+      },
+      "425c03c8-3e6f-4e2b-9c30-91cd5654cbd8": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 4 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 4": "TRIM( SPLIT( [顧客名], \"-\", 2 ) )"
+      },
+      "69c7babe-c16a-40c3-b8f0-7bb3bf5b7db9": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 5 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 5": "TRIM( SPLIT( [顧客名], \"-\", 3 ) )"
+      },
+      "96fa7331-2cd6-4e15-a97d-c248f0ef7fb6": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 6 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 6": "TRIM( SPLIT( [顧客名], \"-\", 4 ) )"
+      },
+      "56bff2dd-f697-4ea8-86b7-ab93e31a7d28": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 7 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 7": "TRIM( SPLIT( [顧客名], \"-\", 5 ) )"
+      },
+      "baca49e7-6de5-441c-bb59-467a20dc5e2a": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 8 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 8": "TRIM( SPLIT( [顧客名], \"-\", 6 ) )"
+      },
+      "7f8e1461-e45c-46be-b399-45c652538503": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 9 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 9": "TRIM( SPLIT( [顧客名], \"-\", 7 ) )"
+      },
+      "72dc577d-64f6-4c01-a25e-e14f3657a26e": {
+        "nodeType": ".v1.AddColumn",
+        "name": "顧客名 - 分割済み 10 を追加 1",
+        "description": null,
+        "namespace": "Default",
+        "顧客名 - 分割済み 10": "TRIM( SPLIT( [顧客名], \"-\", 8 ) )"
+      }
+    }
+  },
+  "b1669435-9393-4c85-b74f-d2ae3e5f0660": {
+    "name": "NULL値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "ec3154db-b300-48cb-8552-d8c43eb58338": {
+        "nodeType": ".v2018_2_1.RichNullFilter",
+        "name": "RichNullFilter 5",
+        "description": null,
+        "actions_detail": {
+          "filter": 2.0,
+          "columnName": "数量",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-数量"
+        }
+      },
+      "7d09c485-73ee-48bc-9505-c263fdbda1ea": {
+        "nodeType": ".v2018_2_1.RichNullFilter",
+        "name": "RichNullFilter 6",
+        "description": null,
+        "actions_detail": {
+          "filter": 1.0,
+          "columnName": "数量",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-数量"
+        }
+      }
+    }
+  },
+  "3adc0b9c-0202-40e2-865e-45cb13da41cf": {
+    "name": "値の範囲",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "9562483e-8310-4f8c-8b35-bdf7a95d0c73": {
+        "nodeType": ".v1.RichRangeFilter",
+        "name": "RichRangeFilter 4",
+        "description": null,
+        "actions_detail": {
+          "richRangeType": 0.0,
+          "columnName": "数量",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-数量",
+          "includeNulls": true,
+          "appliedMin": "1",
+          "appliedMax": "15",
+          "minimumValue": "1",
+          "maximumValue": "15",
+          "dataType": "integer"
+        }
+      },
+      "2b7c3955-512c-4df8-afaa-be43827e8690": {
+        "nodeType": ".v1.RichRangeFilter",
+        "name": "RichRangeFilter 5",
+        "description": null,
+        "actions_detail": {
+          "richRangeType": 2.0,
+          "columnName": "数量",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-数量",
+          "includeNulls": false,
+          "appliedMin": "1",
+          "appliedMax": "15",
+          "minimumValue": "1",
+          "maximumValue": "15",
+          "dataType": "integer"
+        }
+      },
+      "17236eb3-87a2-47c7-90b5-a75bb065b19e": {
+        "nodeType": ".v1.RichRangeFilter",
+        "name": "RichRangeFilter 6",
+        "description": null,
+        "actions_detail": {
+          "richRangeType": 1.0,
+          "columnName": "数量",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-数量",
+          "includeNulls": false,
+          "appliedMin": "1",
+          "appliedMax": "12",
+          "minimumValue": "1",
+          "maximumValue": "15",
+          "dataType": "integer"
+        }
+      }
+    }
+  },
+  "b635ad12-51a6-4cf8-89a7-7ba503ff49db": {
+    "name": "選択した値",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "a5959e2b-e835-4f38-8d9c-f36a302d9c9f": {
+        "nodeType": ".v2019_3_2.RichDiscreteValueFilter",
+        "name": "RichDiscreteValueFilter 5",
+        "description": null,
+        "actions_detail": {
+          "exclude": false,
+          "values": {
+            "数量": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ]
+          },
+          "datatype": "integer",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-数量",
+          "outOfSampleValues": null
+        }
+      },
+      "b7661265-ab67-4608-adf6-8727dcc1aba5": {
+        "nodeType": ".v2019_3_2.RichDiscreteValueFilter",
+        "name": "RichDiscreteValueFilter 6",
+        "description": null,
+        "actions_detail": {
+          "exclude": true,
+          "values": {
+            "数量": [
+              "1",
+              "4",
+              "5"
+            ]
+          },
+          "datatype": "integer",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-数量",
+          "outOfSampleValues": null
+        }
+      }
+    }
+  },
+  "b65908f2-08b0-4944-ac23-550581aaf1b7": {
+    "name": "値のグループ",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "e7b41738-885c-4a25-b8fc-6cba3035bd5e": {
+        "nodeType": ".v2019_1_4.Remap",
+        "name": "クリーニング 4",
+        "description": null,
+        "actions_detail": {
+          "columnName": "数量",
+          "values": {
+            "8": [
+              "8",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7"
+            ]
+          },
+          "groupMethodProps": null,
+          "fieldId": ""
+        }
+      }
+    }
+  },
+  "f8596fbe-d534-4e5b-ae94-2419bb26bede": {
+    "name": "相対日付に関するフィルター",
+    "nodeType": ".v1.Container",
+    "actions": {
+      "e76ec1a9-01d3-4a0a-b733-8e0f174a8a84": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 2",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 0.0,
+          "filterSelection": 1.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": false,
+          "timeIntervalAnchor": "1776226168333",
+          "isIncludingNullValues": false
+        }
+      },
+      "c05005aa-de93-440d-b83b-8a0e4742ac01": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 4",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 1.0,
+          "filterSelection": 0.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": false,
+          "timeIntervalAnchor": "1776226210292",
+          "isIncludingNullValues": false
+        }
+      },
+      "7c1f78ea-f22d-4bc5-91e4-351b0435295f": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 4",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 1.0,
+          "filterSelection": 1.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": false,
+          "timeIntervalAnchor": "1776226278592",
+          "isIncludingNullValues": false
+        }
+      },
+      "7050d738-67af-4ddd-801b-36735233fa65": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 5",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 2.0,
+          "filterSelection": 2.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": false,
+          "timeIntervalAnchor": "1776226295333",
+          "isIncludingNullValues": false
+        }
+      },
+      "b5b6026b-7914-4720-9c38-f609ca433aae": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 6",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 3.0,
+          "filterSelection": 4.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": false,
+          "timeIntervalAnchor": "1776226304381",
+          "isIncludingNullValues": false
+        }
+      },
+      "617315f3-fdcb-4a29-a108-a3ba66e5d8ba": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 7",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 3.0,
+          "filterSelection": 5.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": false,
+          "timeIntervalAnchor": "1776226317116",
+          "isIncludingNullValues": false
+        }
+      },
+      "dbdb2918-c3e7-462c-8415-747a6155092f": {
+        "nodeType": ".v1.RichRelativeDateFilter",
+        "name": "RichRelativeDateFilter 8",
+        "description": null,
+        "actions_detail": {
+          "columnName": "出荷日",
+          "fieldId": "9cbdcccc-c3d1-49b8-a522-d4cfaa170dd3-出荷日",
+          "timeIntervalDiscretization": 4.0,
+          "filterSelection": 1.0,
+          "lastTimeIntervalAmount": 3.0,
+          "nextTimeIntervalAmount": 3.0,
+          "isAnchoredRelativeToTimeInterval": false,
+          "timeIntervalAnchor": "1776226330931",
+          "isIncludingNullValues": false
+        }
+      }
+    }
+  }
+}

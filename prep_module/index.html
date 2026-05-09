@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Cytoscape Node Mapping</title>
+<script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+
+<style>
+  #cy {
+    width: 100%;
+    height: 650px;
+    border: 1px solid #ccc;
+    transition: height 0.2s;
+  }
+
+  #panel {
+    width: 100%;
+    height: 300px;   /* 下に表示する高さ */
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow: auto;
+    display: none;   /* 初期は非表示 */
+  }
+  body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column; /* ★追加 */
+    gap: 10px;
+  }
+  .table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 16px;
+    min-width: 600px; /* 列が多い場合に横スクロールさせる */
+    font-size: 12px;
+  }
+  th, td {
+    border: 1px solid #999;
+    padding: 4px 6px;
+    vertical-align: top;
+    word-break: break-word;
+  }
+  th {
+    background: #f2f2f2;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="cy"></div>
+<div id="panel">node を選択してください</div>
+
+<script>
+/* ===============================
+ * elements
+ * =============================== */
+const elements = [];
+
+/* ===============================
+ * df_store（node_baseid がキー）
+ * =============================== */
+const dfStore = [];
+
+/* ===============================
+ * 汎用 table renderer
+ * =============================== */
+function renderTable(rows) {
+  if (rows.length === 0) return "<i>no data</i>";
+
+  const allColumns = Object.keys(rows[0]).filter(c => c !== "node_baseid");
+
+  const columns = allColumns.filter(col =>
+    rows.some(row => row[col] !== null && row[col] !== "" && row[col] !== undefined)
+  );
+
+  if (columns.length === 0) return "";
+
+  let html = "<table><thead><tr>";
+  columns.forEach(col => html += `<th>${col}</th>`);
+  html += "</tr></thead><tbody>";
+
+  rows.forEach(row => {
+    html += "<tr>";
+    columns.forEach(col => {
+      html += `<td>${row[col] ?? ""}</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</tbody></table>";
+
+  return `<div class="table-wrapper">${html}</div>`;
+}
+
+
+/* ===============================
+ * node 選択時レンダリング
+ * =============================== */
+function renderNodeData(nodeId, nodeLabel) {
+  let html = `<h2>${nodeLabel}</h2>`;
+
+  Object.entries(dfStore).forEach(([dfName, df]) => {
+    const filtered = df.filter(r => r.node_baseid == nodeId);
+
+    if (filtered.length === 0) return;
+    if (!hasVisibleColumns(filtered)) return;
+
+    html += `<h3>${dfName}</h3>`;
+    html += renderTable(filtered);
+  });
+
+  return html;
+}
+
+function showPanel() {
+  const panel = document.getElementById("panel");
+  const cyDiv = document.getElementById("cy");
+
+  panel.style.display = "block";
+  cyDiv.style.height = "450px";  // 上を少し縮める
+  cy.resize();
+}
+
+function hidePanel() {
+  const panel = document.getElementById("panel");
+  const cyDiv = document.getElementById("cy");
+
+  panel.style.display = "none";
+  cyDiv.style.height = "650px";  // 元に戻す
+  cy.resize();
+}
+
+function hasVisibleColumns(rows) {
+  if (rows.length === 0) return false;
+
+  const columns = Object.keys(rows[0]).filter(c => c !== "node_baseid");
+
+  return columns.some(col =>
+    rows.some(row => row[col] !== null && row[col] !== "" && row[col] !== undefined)
+  );
+}
+
+/* ===============================
+ * cytoscape
+ * =============================== */
+const cy = cytoscape({
+  container: document.getElementById("cy"),
+  elements: elements,
+  layout: { name: "preset" },
+  style: []
+});
+
+cy.on("tap", "node", evt => {
+  const node = evt.target;
+  showPanel();
+  document.getElementById("panel").innerHTML =
+    renderNodeData(
+      node.data("id"),
+      node.data("label")
+    );
+});
+
+cy.on("tap", evt => {
+  if (evt.target === cy) {
+    hidePanel();
+  }
+});
+
+</script>
+
+</body>
+</html>
