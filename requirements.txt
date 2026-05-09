@@ -1,7 +1,8 @@
 streamlit
 pandas
-graphviz
+numpy
+st-cytoscape
 xlsxwriter
 Pillow
 lxml
-numpy
+graphviz

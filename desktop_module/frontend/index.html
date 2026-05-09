@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    #cy {
+      width: 100%;
+      height: 95vh;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<div id="cy"></div>
+
+<script>
+
+let cy = null;
+
+// -------------------------
+// Streamlitへ返却
+// -------------------------
+
+function sendValue(value) {
+  window.parent.postMessage(
+    {
+      isStreamlitMessage: true,
+      type: "streamlit:setComponentValue",
+      value: value
+    },
+    "*"
+  );
+}
+
+// -------------------------
+// 初期折りたたみ
+// -------------------------
+
+function collapseAll() {
+  cy.nodes().forEach(node => {
+    if (node.id() !== 'root') {
+      node.hide();
+    }
+  });
+  cy.edges().hide();
+  const rootChildren = cy.getElementById('root').outgoers('node');
+  rootChildren.show();
+  cy.getElementById('root')
+    .outgoers('edge')
+    .show();
+}
+
+// -------------------------
+// graph生成
+// -------------------------
+
+function initializeGraph(elements, stylesheet) {
+  // 再生成対策
+  if (cy !== null) {
+      cy.destroy();
+  }
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements: elements,
+    style: stylesheet,
+    layout: {
+        name: 'breadthfirst',
+        directed: true,
+        padding: 20,
+        spacingFactor: 0.8
+    }
+  });
+  collapseAll();
+  cy.layout({
+      name: 'breadthfirst',
+      directed: true,
+      padding: 20,
+      spacingFactor: 0.8
+  }).run();
+  cy.zoom(0.8);
+  cy.center();
+  // -------------------------
+  // 展開制御
+  // -------------------------
+  cy.on('tap', 'node', function(evt) {
+    const node = evt.target;
+    const children = node.outgoers('node');
+    const childEdges = node.outgoers('edge');
+    // -------------------------
+    // 常にpath返却
+    // -------------------------
+    sendValue(
+        node.data('fullPath')
+    );
+    console.log(
+        node.data('fullPath')
+    );
+    // -------------------------
+    // leafなら終了
+    // -------------------------
+    if (children.length === 0) {
+        return;
+    }
+    // -------------------------
+    // branch toggle
+    // -------------------------
+    const visible = children[0].visible();
+    if (visible) {
+        children.hide();
+        childEdges.hide();
+        children.successors().hide();
+    } else {
+        children.show();
+        childEdges.show();
+    }
+  });
+}
+// -------------------------
+// Streamlit message受信
+// -------------------------
+window.addEventListener("message", (event) => {
+  const data = event.data;
+  if (!data.args) {
+    return;
+  }
+  initializeGraph(
+    data.args.elements,
+    data.args.stylesheet
+  );
+});
+// -------------------------
+// Streamlit ready
+// -------------------------
+window.parent.postMessage(
+  {
+    isStreamlitMessage: true,
+    type: "streamlit:componentReady",
+    apiVersion: 1
+  },
+  "*"
+);
+
+window.parent.postMessage(
+  {
+    isStreamlitMessage: true,
+    type: "streamlit:setFrameHeight",
+    height: 540
+  },
+  "*"
+);
+
+</script>
+</body>
+</html>

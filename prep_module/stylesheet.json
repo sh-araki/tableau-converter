@@ -1,0 +1,21 @@
+{
+  "stylesheet": [
+    {
+      "selector": "node", 
+      "style": {
+        "label": "data(label)", 
+        "width": 20, 
+        "height": 20
+      }
+    },{
+      "selector": "edge",
+      "style": {
+        "width": 3,
+        "curve-style": "bezier",
+        "target-arrow-shape": "triangle",
+        "label": "data(label)",
+        "events": "no"
+      }
+    }
+  ]
+}
