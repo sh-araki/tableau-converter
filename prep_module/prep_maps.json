@@ -1,11 +1,11 @@
 {
     "common": [
-            "nodeType",
-            "name",
-            "id",
-            "baseType",
-            "serialize",
-            "description"
+        "nodeType",
+        "name",
+        "id",
+        "baseType",
+        "serialize",
+        "description"
     ],
     ".v1.RemoveColumns": {
         "type": "remove_list",
@@ -158,6 +158,13 @@
         "type": "filter",
         "column": [
             "ranges", 
+            "exclude"
+        ]
+    },
+    ".v1.ValueFilter": {
+        "type": "filter",
+        "column": [
+            "values", 
             "exclude"
         ]
     },
@@ -452,10 +459,40 @@
         "generatedInputs": "list",
         "annotations": false
     },
+    ".v1.LoadSql": {
+        "column": [
+            "connectionId",
+            "connectionAttributes",
+            "debugModeRowLimit",
+            "originalDataTypes",
+            "randomSampling",
+            "updateTimestamp",
+            "restrictedFields",
+            "userRenamedFields",
+            "selectedFields",
+            "samplingType",
+            "groupByFields",
+            "filters",
+            "relation"
+        ],
+        "fields": "list",
+        "actions": "list",
+        "annotations": false
+    },
     ".v1.WriteToHyper": {
         "column": [
             "hyperOutputFile",
             "tdsOutput"
+        ],
+        "type": "output",
+        "annotations": false
+    },
+    ".v2020_3_1.WriteToDatabase": {
+        "column": [
+            "connectionId",
+            "attributes",
+            "preOutputCommands",
+            "postOutputCommands"
         ],
         "type": "output",
         "annotations": false
