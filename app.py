@@ -3,18 +3,15 @@ from prep_module.main import PrepMainProcess
 from desktop_module.extract import DesktopInfoExtract
 from desktop_module.convert import DesktopNodesView
 import pandas as pd
-import glob
 import logging
 import uuid
-import numpy as np
 import streamlit as st
 from st_cytoscape import cytoscape
-import json
 import tempfile
 from pathlib import Path
 import io
-import base64
-from PIL import Image, ImageColor, ImageDraw
+#import base64
+#from PIL import Image, ImageColor, ImageDraw
 import streamlit.components.v1 as components
 
 
@@ -31,7 +28,7 @@ def main(logger):
   #ファイルアップローダー
   uploaded_files = st.file_uploader(
     "Upload your Tableau file",
-    type=["tfl", "tflx", "twb", "twbx"],
+    type=["tfl", "tflx", "twb", "twbx", "tds", "tdsx"],
     accept_multiple_files=True,
   )
   if not uploaded_files:
@@ -47,7 +44,8 @@ def main(logger):
       tmp_file.write_bytes(file_bytes)
       try:
         fc = FileClassifier(tmp_file, run_id)
-        if '.tfl' in fc.suffix.lower():
+        suffix = fc.suffix.lower()
+        if '.tfl' in suffix:
           data_dict = fc.process().data_dict
           elements, stylesheet, dfs, node_uml, html = prep_process(data_dict, run_id)
           logger.info(f"[{run_id}][{file_name}] ===== File Data Convert END =====")
@@ -85,8 +83,7 @@ def main(logger):
               st.write(key)
               st.dataframe(df)
           logger.info(f"[{run_id}][{file_name}] ===== Rendering END =====")
-#        elif '.tds' in fc.suffix.lower():
-        elif '.twb' in fc.suffix.lower():
+        elif '.twb' in suffix or '.tds' in suffix:
           data_xml = fc.process().data_xml
           desktop_data = DesktopInfoExtract(data_xml, run_id)
           datas = [
@@ -115,32 +112,42 @@ def main(logger):
           datasource_element, datasource_stylesheet = desktop_node_view.datasource_cytoscape_element()
           if datasource_element:
             st.write("datasource relationships")
-            cytoscape(
-              elements=datasource_element,
-              stylesheet=datasource_stylesheet,
-              layout={"name": "cose"},
-              key=f"datasource_{uploaded_file.name}",
-              width="100%",
-              height="540px",
+            datasource_name = st.selectbox(
+                "select datasource",
+                datasource_element.keys(),
             )
-          st.write("datasource overview")
-          for df in desktop_node_view.datasource_overview():
-            st.dataframe(df)
-          actions_element, actions_stylesheet = desktop_node_view.actions_overview()
-          if actions_element:
-            st.write('actions graph')
-            cytoscape(
-              elements=actions_element,
-              stylesheet=actions_stylesheet,
-              layout={"name": "cose"},
-              key=f"actions_{uploaded_file.name}",
-              width="100%",
-              height="540px",
-            )
-          option_dict = desktop_node_view.dashboard_and_layout_in_zone()
-          if option_dict:
-            st.write('zone graph')
+            if datasource_name:
+              cytoscape(
+                elements=datasource_element[datasource_name],
+                stylesheet=datasource_stylesheet,
+                #layout={"name": "preset"},
+                key=f"datasource_{uploaded_file.name}",
+                width="100%",
+                height="540px",
+              )
+            st.write("datasource overview")
+            df_overview = desktop_node_view.datasource_overview()
+            for k, v in df_overview.items():
+              st.write(k)
+              st.dataframe(v)
+          try:
+            actions_element, actions_stylesheet = desktop_node_view.actions_overview()
+            if actions_element:
+              st.write('actions graph')
+              cytoscape(
+                elements=actions_element,
+                stylesheet=actions_stylesheet,
+                layout={"name": "preset"},
+                key=f"actions_{uploaded_file.name}",
+                width="100%",
+                height="540px",
+              )
+          except Exception as e:
+            logger.exception(f"[{run_id}] Error in convert action data: {e}")
+          try:
+            option_dict = desktop_node_view.dashboard_and_layout_in_zone()
             if option_dict:
+              st.write('zone graph')
               col3, col4 = st.columns(2)
               with col3:
                 dashboard_name = st.radio(
@@ -161,16 +168,20 @@ def main(logger):
                 width="100%",
                 height="540px",
               )
-              node_id = selected_zone["nodes"][-1]
-              st.write(node_id)
-              for k, dfs in desktop_data.extract_zone_info().items():
-                st.write(k)
-                temp_df = dfs[
-                  (dfs['dashboard_name']==dashboard_name) & 
-                  (dfs['layout_type']==layout_type) &
-                  (dfs['id']==node_id)
-                ]
-                st.write(temp_df)
+              node_ids = selected_zone.get("nodes", [])
+              if node_ids:
+                node_id = node_id[-1]
+                st.write(node_id)
+                for k, dfs in desktop_data.extract_zone_info().items():
+                  st.write(k)
+                  temp_df = dfs[
+                    (dfs['dashboard_name']==dashboard_name) & 
+                    (dfs['layout_type']==layout_type) &
+                    (dfs['id']==node_id)
+                  ]
+                  st.write(temp_df)
+          except Exception as e:
+            logger.exception(f"[{run_id}] Error in convert zone data: {e}")
         logger.info(f"[{run_id}][{file_name}] ===== Rendering END =====")
       except Exception as e:
         st.write('some error has occurred')

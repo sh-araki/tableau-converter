@@ -1,15 +1,16 @@
-import io
-import base64
+#import io
+#import base64
 from pathlib import Path
 import pandas as pd
 import numpy as np
 import json
-from PIL import Image, ImageColor, ImageDraw
-import base64
-from io import BytesIO
-from lxml import etree as ET
-from collections import defaultdict
+#from PIL import Image, ImageColor, ImageDraw
+#from io import BytesIO
+#from lxml import etree as ET
+#from collections import defaultdict
 import logging
+import math
+import hashlib
 
 
 class DesktopNodesView:
@@ -75,69 +76,33 @@ class DesktopNodesView:
     )
     stylesheet = self.stylesheet_maps['node_info']
     return elements, stylesheet
-  
-  #datasourceの結合・リレーション関係のelementを返す
-  def datasource_cytoscape_element(self):
-    datasource_connection = self.datasource_connection
-    relation_df = datasource_connection['relationship']
-    join_df = datasource_connection['join']
-    #same as action_element
-    #elements = [
-    #    # ===== group nodes =====
-    #    {"data": {"id": "group1", "comment": "parent"}},
-    #    {"data": {"id": "group2", "comment": "parent"}},
-    #
-    #    # ===== child nodes (group1) =====
-    #    {"data": {"id": "n1", "parent": "group1", "comment": "child"}},
-    #    {"data": {"id": "n2", "parent": "group1", "comment": "child"}},
-    #
-    #    # ===== child nodes (group2) =====
-    #    {"data": {"id": "n3", "parent": "group2", "comment": "child"}},
-    #    {"data": {"id": "n4", "parent": "group2", "comment": "child"}},
 
-    #    # ===== edges group =====
-    #    {"data": {"id": "parent_e1", "source": "group1", "target": "group2", "comment": "parent"}},
-    #
-    #    # ===== edges within group =====
-    #    {"data": {"id": "e1", "source": "n1", "target": "n2", "comment": "child"}},
-    #    {"data": {"id": "e2", "source": "n3", "target": "n4", "comment": "child"}},
-    #]
-    elements = []
-    if relation_df is not None:
-      for _, row in relation_df.iterrows():
-        left_relation = row['left'].replace('[','').replace(']','')
-        right_relation = row['right'].replace('[','').replace(']','')
-        group_left = {"data": {"id": left_relation, "label": left_relation.split('_')[0], "comment": "parent"}}
-        elements.append(group_left)
-        group_right = {"data": {"id": right_relation, "label": right_relation.split('_')[0], "comment": "parent"}}
-        elements.append(group_right)
-        group_edge = {"data": {"id": row['key'], "source": left_relation, "target": right_relation, "label": row['key'], "comment": "parent"}}
-        elements.append(group_edge)
-    if join_df is not None:
-      for _, row in join_df.iterrows():
-        left_table = row['left'].split('[')[1].split(']')[0]
-        right_table = row['right'].split('[')[1].split(']')[0]
-        join_left = {"data": {"id": left_table, "parent": row['object-id'], "label": left_table, "comment": "child"}}
-        elements.append(join_left)
-        join_right = {"data": {"id": right_table, "parent": row['object-id'], "label": right_table, "comment": "child"}}
-        elements.append(join_right)
-        join_key = f'{row['join']}・{row['key']}'
-        join_edge = {"data": {"id": join_key, "source": left_table, "target": right_table, "label": join_key, "comment": "child"}}
-        elements.append(join_edge)
-    stylesheet = self.stylesheet_maps['datasource_info']
-    return elements, stylesheet
-  
+  #空列を削除
+  @staticmethod
+  def clean_dataframe(df):
+      return df.dropna(axis=1, how="all")
+
+  #フィールドの概要ビューを作成する
   def datasource_overview(self):
     dfs = self.dfs
-    metadata = dfs.get('/datasources/datasource/connection/metadata-records/metadata-record')
-    calclation = dfs.get('/datasources/datasource/column/calculation')
-    connection = dfs.get('/datasources/datasource/connection/named-connections/named-connection/connection')
-    datasource_column = dfs.get('/datasources/datasource/column')
-    #connection
-    connection = connection[["datasource_name", "named-connection_caption", "filename", "class"]]
-    conenction = connection.rename(columns={"named-connection_caption": "connect_caption", "class": "source_connection_class"})
+    data_map = {
+      'metadata': '/datasources/datasource/connection/metadata-records/metadata-record',
+      'calculation': '/datasources/datasource/column/calculation',
+      'connection': '/datasources/datasource/connection/named-connections/named-connection/connection',
+      'datasource_column': '/datasources/datasource/column'
+    }
+    df_map = {}
+    for k, v in data_map.items():
+      df = dfs.get(v)
+      if df is not None:
+        if k == 'connection':
+          df = df.rename(columns={
+            "named-connection_caption": "connect_caption", 
+            "class": "source_connection_class"
+          })
+        df_map[k] = self.clean_dataframe(df)
     #metadata
-    metadata = pd.merge(metadata, connection, on="datasource_name", how='left')
+    metadata = df_map['metadata']
     columns_list = metadata.columns
     remove_list = ["sub_index", "sub_tag", "sub_text"]
     index_list = [x for x in columns_list if x not in remove_list]
@@ -148,289 +113,426 @@ class DesktopNodesView:
         values="sub_text"
       )
     ).reset_index().rename(columns={'local-name': 'name'}).drop(columns=['index'])
-    metadata_rename = datasource_column[['datasource_name', 'name', 'caption']]
-    metadata_rename = metadata_rename.rename(columns={'caption': 'rename'})
-    metadata = pd.merge(pivot, metadata_rename, on=['datasource_name', 'name'], how='left').set_index(keys='ordinal')
-    #calclation
-    if not calclation.empty:
-      calclation = calclation[["datasource_name", "datasource_caption", "column_name", "column_caption", "column_datatype", "formula"]]
-      calclation = calclation.rename(columns={'column_name': 'name', "column_caption": 'caption', "column_datatype": 'type'})
-      calclation = pd.merge(calclation, connection, on="datasource_name", how='left')
-      #datasource_column
-      datasource_column = datasource_column[["datasource_name", "name", "role"]]
-      calclation = pd.merge(calclation, connection, on="datasource_name", how='left')
-      calclation = pd.merge(calclation, datasource_column, on=["datasource_name", 'name'], how='left')
-    else:
-      calclation = pd.DataFrame()
-    df = pd.concat([metadata, calclation])
-    df = df.reset_index(drop=True)
-    if 'object-id' in df.columns:
-      df_datasource = df[['datasource_name', 'datasource_caption', 'object-id', 'parent-name']].drop_duplicates()
-      df_datasource = df_datasource[~df_datasource['object-id'].isnull()].reset_index(drop=True)
-    else:
-      df_datasource = df[['datasource_name', 'datasource_caption', 'parent-name']].drop_duplicates()
-    return df_datasource, df
+    df_map['metadata'] = pivot
 
+    #calculation
+    if 'calculation' in df_map:
+      calculation = df_map['calculation']
+      df_replacemap = df_map['datasource_column'][['caption', 'name', 'datasource_name']]
+      #行カウントとパラメーターの文字列を変換
+      df_replacemap["column"] = df_replacemap.apply(
+          lambda r:
+              f"[{r['datasource_name']}].{r['name']}"
+              if r["datasource_name"] == "Parameters"
+              else (
+                  f"[{r['datasource_name']}].[{r['caption']}]"
+                  if '[__tableau_internal_object_id__]' in r["name"]
+                  else r['name']
+              ),
+          axis=1
+      )
+      df_replacemap = df_replacemap[df_replacemap['caption'].notna()]
+      df_replacemap['caption'] = '[' + df_replacemap['caption'] +']'
+      #mappingを作ってcalculationの計算式列を変換
+      mapping = df_replacemap.set_index("column")["caption"].to_dict()
+      for old, new in mapping.items():
+        calculation["formula"] = calculation["formula"].str.replace(
+          old,
+          new,
+          regex=False
+        )
+      df_map['calculation'] = calculation
+    return df_map
+
+  #データソースのマップをデータソースごとに作る(親子関係のみ)
+  #elements = [
+  #    # ===== group nodes =====
+  #    {"data": {"id": "group1", "comment": "parent"}},
+  #    {"data": {"id": "group2", "comment": "parent"}},
+  #
+  #    # ===== child nodes (group1) =====
+  #    {"data": {"id": "n1", "parent": "group1", "comment": "child"}},
+  #    {"data": {"id": "n2", "parent": "group1", "comment": "child"}},
+  #
+  #    # ===== child nodes (group2) =====
+  #    {"data": {"id": "n3", "parent": "group2", "comment": "child"}},
+  #    {"data": {"id": "n4", "parent": "group2", "comment": "child"}},
+  #    # ===== edges group =====
+  #    {"data": {"id": "parent_e1", "source": "group1", "target": "group2", "comment": "parent"}},
+  #
+  #    # ===== edges within group =====
+  #    {"data": {"id": "e1", "source": "n1", "target": "n2", "comment": "child"}},
+  #    {"data": {"id": "e2", "source": "n3", "target": "n4", "comment": "child"}},
+  #]
+
+  @staticmethod
+  def datasource_node(row, node_type, table_type):#, i):
+    #if table_type == 'left_table':
+    #  x = (i % 5) * 250
+    #  y = (i // 5) * 150
+    #elif table_type == 'right_table':
+    #  x = ((i % 5) + 1) * 250
+    #  y = (i // 5) * 150
+    data_dict = {
+      "id": row[table_type],
+      "label": row[table_type],
+      "comment": node_type
+    }
+    #position_dict ={"x": x, "y": y}
+    if node_type == 'child':
+      data_dict["parent"] = row['parent_id']
+    return {"data": data_dict}#, "position": position_dict}
+
+  @staticmethod
+  def datasource_edge(row, node_type, edges):
+    edge_id = f"{row['left_table']}_{row['right_table']}"
+    edge_label = f"{row['left']}{row['operator']}{row['right']}"
+    edge_dict = {
+      "data": {
+        "id": edge_id, 
+        "source": row['left_table'], 
+        "target": row['right_table'],
+        "label": edge_label,
+        "comment": node_type
+      }
+    }
+    if not edge_id in edges:
+      edges[edge_id] = edge_dict
+    else:
+      edges[edge_id]['data']['label'] += f"\n{edge_label}"
+
+  #datasourceの結合・リレーション関係のelementを返す
+  def datasource_cytoscape_element(self):
+    all_data = self.datasource_connection
+    if not all_data.empty:
+      datasources = all_data['datasource_name'].unique().tolist()
+      elements_dict = {}
+      for datasource in datasources:
+        nodes = {}
+        edges = {}
+        df = all_data[all_data['datasource_name'] == datasource]
+        #parent
+        df_parent = df[df['type']=='parent']
+        if not df_parent.empty:
+          for i, (_, row) in enumerate(df_parent.iterrows()):
+            #nodes[row['left_table']] = self.datasource_node(row, 'parent', 'left_table', i)
+            #nodes[row['right_table']] = self.datasource_node(row, 'parent', 'right_table', i)
+            nodes[row['left_table']] = self.datasource_node(row, 'parent', 'left_table')
+            nodes[row['right_table']] = self.datasource_node(row, 'parent', 'right_table')
+            self.datasource_edge(row, 'parent', edges)
+        #child
+        df_child = df[df['type']=='child']
+        if not df_child.empty:
+          for i, (_, row) in enumerate(df_child.iterrows()):
+            #nodes[row['left_table']] = self.datasource_node(row, 'child', 'left_table', i)
+            #nodes[row['right_table']] = self.datasource_node(row, 'child', 'right_table', i)
+            nodes[row['left_table']] = self.datasource_node(row, 'child', 'left_table')
+            nodes[row['right_table']] = self.datasource_node(row, 'child', 'right_table')
+            self.datasource_edge(row, 'child', edges)
+        elements_dict[datasource] = list(nodes.values()) + list(edges.values())
+      stylesheet = self.stylesheet_maps['datasource_info']
+      return elements_dict, stylesheet
+    else:
+      return None, None
+
+  #ダッシュボードに入っているワークシートのマスタを作成する
   def return_worksheet_dashboard_masta(self):
     dfs = self.dfs
     zone_info = self.zone_info
-    #worksheet and worksheet in dashboard
-    ws = dfs.get('/worksheets/worksheet/simple-id', None)
-    if not ws.empty:
-      ws = ws[['worksheet_name']].rename(columns={'worksheet_name': 'name'})
-    else:
-      ws = pd.DataFrame()
-   
-    zone_ws = zone_info.get('zone', None)
-    if not zone_ws.empty:
-      zone_ws = zone_ws[['dashboard_name', 'name']].drop_duplicates()
-      zone_ws = zone_ws[~zone_ws['name'].isna()]
-    else:
-      zone_ws = pd.DataFrame()
-    df_ws = pd.concat([ws, zone_ws])
-    #dashbaord masta
-    if not df_ws.empty:
-      df_dashboard = dfs.get('/dashboards/dashboard/simple-id')[['dashboard_name']]
-      df_ws = pd.merge(df_ws, df_dashboard, on='dashboard_name', how='outer')
-      #worksheet's datasource
-      ws_datasource = dfs.get('/worksheets/worksheet/table/view/datasources/datasource')[['name', 'worksheet_name']].rename(columns={'name': 'datasource_name', 'worksheet_name': 'name'})
-      df_ws = pd.merge(df_ws, ws_datasource, how='outer')
-      return df_ws
+    #worksheet/dashboard(→zoneからどのワークシートが入っているかも作成)/worksheetがどのdatasourceを使用しているか、の一覧を作成
+    data_map = {
+      'worksheet': ['/worksheets/worksheet/simple-id', ['worksheet_name']],
+      'dashboard': ['/dashboards/dashboard/simple-id', ['dashboard_name']],
+      'worksheet_datasource': ['/worksheets/worksheet/table/view/datasources/datasource', ['name', 'caption', 'worksheet_name']]
+    }
+    df_map = {}
+    for k, v in data_map.items():
+      df = dfs.get(v[0])
+      if df is not None:
+        df = df[v[1]]
+        if k == 'worksheet_datasource':
+          df = df[df['name']!='Parameters']
+        if k == 'dashboard':
+          zone_ws = zone_info.get('zone', None)
+          zone_ws = zone_ws[['dashboard_name', 'name']].dropna().drop_duplicates()
+          df = pd.merge(df, zone_ws, on='dashboard_name', how='left')
+        df_map[k] = self.clean_dataframe(df)
+    return df_map
 
-  def desktop_actions(self):
+  #actionのsourceを取り出す(source dashboard='~' / exclude-sheet name='~')
+  def actions_source(self):
     dfs = self.dfs
-    df = dfs["/actions/action/command/param"]
-    # -------------------------
-    # pivot用
-    # -------------------------
-    base = (
+    df = dfs.get("/actions/action/source")
+    if df is not None:
+      df = self.clean_dataframe(df)
+      source_exclude = dfs.get("/actions/action/source/exclude-sheet")
+      if source_exclude is not None:
+        source_exclude= (
+          source_exclude
+          .groupby("action_name", as_index=False)["name"]
+          .apply(lambda x: list(dict.fromkeys(x)))
+          .rename(columns={"name": "source_exclude"})
+        )
+        df = pd.merge(df, source_exclude, on='action_name', how='left')
+      return df
+    else:
+      return None
+
+  def actions_target(self):
+    df = self.dfs.get("/actions/action/command/param")
+    if df is not None:
+      base = (
         df
         .pivot_table(
-            index=[
-                "action_name",
-                "action_caption",
-                "command_command"
-            ],
-            columns="name",
-            values="value",
-            aggfunc="first"
-        )
-        .reset_index()
-    )
-    # -------------------------
-    # rename
-    # -------------------------
-    base = base.rename(columns={
-        "command_command": "command_type"
-    })
-    # -------------------------
-    # exclude explode
-    # -------------------------
-    base["exclude"] = (
-        base["exclude"]
-        .fillna("")
-        .str.split(",")
-    )
-    result = (
-        base
-        .explode("exclude")
-    )
-    # -------------------------
-    # <<COMMA>> 復元
-    # -------------------------
-    result["exclude"] = (
-      result["exclude"]
-      .str.replace("<<COMMA>>", ",", regex=False)
-    )
-    return result
+          index=[
+            "action_name",
+            "action_caption",
+            "command_command"
+          ],
+          columns="name",
+          values="value",
+          aggfunc="first"
+        ).reset_index()
+      )
+      base = base.rename(columns={"command_command": "command_type", "exclude": "target_exclude"})
+      # exclude列をリスト化
+      base["target_exclude"] = base["target_exclude"].fillna("").str.split(",")
+      # <<COMMA>> 復元
+      base["target_exclude"] = base["target_exclude"].apply(
+          lambda lst: [x.replace("<<COMMA>>", ",") for x in lst]
+      )
+      return base
+
+  ##アクションのマップを作成する
+  ##const elements = [
+  ##
+  ##  // parents
+  ##  { data: { id: '概要', label: '概要' }},
+  ##  { data: { id: '製品', label: '製品' }},
+  ##  { data: { id: '顧客', label: '顧客' }},
+  ##
+  ##  // Sales
+  ##  { data: { id: '概要/売上', parent: '概要', label: '売上' }, position: { x: 0, y: 0 } },
+  ##  { data: { id: '製品/売上', parent: '製品', label: '売上' }, position: { x: 0, y: 0 } },
+  ##  { data: { id: '顧客/売上', parent: '顧客', label: '売上' }, position: { x: 0, y: 0 } },
+  ##
+  ##  // Profit
+  ##  { data: { id: '概要/利益', parent: '概要', label: '利益' }, position: { x: 100, y: 0 } },
+  ##  { data: { id: '製品/利益', parent: '製品', label: '利益' }, position: { x: 100, y: 0 } },
+  ##  { data: { id: '顧客/利益', parent: '顧客', label: '利益' }, position: { x: 100, y: 0 } },
+  ##
+  ##  // worksheet entities→ダッシュボードに入っていないワークシート
+  ##  { data: { id: '明細', label: '明細' }, position: { x: 500, y: 500 } },
+  ##  { data: { id: '利益明細', label: '利益明細' }, position: { x: 700, y: 500 } },
+  ##
+  ##  // represents
+  ##  { data: { id: 'r1', source: '概要/売上', target: '明細' } },
+  ##  { data: { id: 'r2', source: '製品/売上', target: '明細' } },
+  ##  { data: { id: 'r3', source: '顧客/売上', target: '明細' } },
+  ##  { data: { id: 'r4', source: '概要/利益', target: '利益明細' } },
+  ##  { data: { id: 'r5', source: '製品/利益', target: '利益明細' } },
+  ##  { data: { id: 'r6', source: '顧客/利益', target: '利益明細' } }
+  ##
+  ##];
 
   def actions_overview(self):
-    dfs = self.dfs
     # worksheet master
     ws_masta = self.return_worksheet_dashboard_masta()
-    ws_masta = ws_masta[ws_masta["datasource_name"] != "Parameters"]
-    ws_list = set(ws_masta["name"].dropna().tolist())
-    target_masta = ws_masta[["dashboard_name", "name"]]
-    df_dict = {}
-    # ======================
-    # TARGET PROCESS
-    # ======================
-    target_df_list_sql = []
-    target_df_list_sql.append(self.desktop_actions())
+    actions_source = self.actions_source()
+    actions_target = self.actions_target()
+    nodes = []
+    edges = []
 
-    if not target_df_list_sql:
-      df_dict["target"] = pd.DataFrame()
-    else:
-      target_df = pd.concat(target_df_list_sql, ignore_index=True)
-      target_rows = []
-      for action_name, temp_df in target_df.groupby("action_name"):
-        temp_df = temp_df.dropna(axis=1, how="all")
-        if "exclude" in temp_df.columns:
-          exclude_df = (
-            temp_df[temp_df["exclude"].notna()]
-            .rename(columns={"target": "dashboard_name", "exclude": "name"})
-            [["dashboard_name", "name"]]
-          )
-          if not exclude_df.empty:
-            include_df = target_masta[
-              (target_masta["dashboard_name"].isin(exclude_df["dashboard_name"])) &
-              (~target_masta["name"].isin(exclude_df["name"]))
-            ].copy()
-            include_df["action_name"] = action_name
-            target_rows.append(include_df)
-          include_targets = temp_df[temp_df["exclude"].isna()]["target"].dropna().tolist()
-        else:
-          include_targets = temp_df["target"].dropna().tolist()
-        include_df_list = []
-        for include_target in include_targets:
-          if include_target in ws_list:
-            include_df_list.append(
-              target_masta[
-                (target_masta["name"] == include_target) &
-                (target_masta["dashboard_name"].isna())
-              ]
-            )
-          else:
-            include_df_list.append(
-              target_masta[target_masta["dashboard_name"] == include_target]
-            )
-        if include_df_list:
-          include_df = pd.concat(include_df_list).copy()
-          include_df["action_name"] = action_name
-          target_rows.append(include_df)
-      df_dict["target"] = (
-        pd.concat(target_rows, ignore_index=True)
-        .drop_duplicates()
-      )
-    # ======================
-    # SOURCE PROCESS
-    # ======================
-    source_df = dfs.get("/actions/action/source")
-    source_exclude_df = dfs.get("/actions/action/source/exclude-sheet")
-    source_rows = []
-    for _, row in source_df.iterrows():
-      if row["type"] == "datasource":
-        temp_df = ws_masta[
-          (ws_masta["datasource_name"] == row["datasource"]) &
-          (ws_masta["dashboard_name"].isna())
-        ].copy()
-      else:
-        if row["worksheet"] is None:
-          temp_df = ws_masta[
-            ws_masta["dashboard_name"] == row["dashboard"]
-          ].copy()
-          temp_df["datasource_name"] = None
-        else:
-          if row['dashboard'] is not None:
-            temp_df = ws_masta[
-              (ws_masta["dashboard_name"] == row["dashboard"]) &
-              (ws_masta["name"]==row['worksheet'])
-            ].copy()
-            temp_df["datasource_name"] = None
-          else:
-            temp_df = ws_masta[
-              (ws_masta["dashboard_name"].isna()) &
-              (ws_masta["name"] == row["worksheet"])
-            ].copy()
-            temp_df["dashboard_name"] = None
-            temp_df["datasource_name"] = None
-      temp_df["action_name"] = row["action_name"]
-      temp_df["action_caption"] = row["action_caption"]
-      exclude_names = source_exclude_df.loc[
-        source_exclude_df["action_name"] == row["action_name"],
-        "name"
-      ]
-      if not exclude_names.empty:
-        temp_df = temp_df[~temp_df["name"].isin(exclude_names)]
-      source_rows.append(temp_df)
-    df_dict["source"] = (
-      pd.concat(source_rows, ignore_index=True)
-      if source_rows else pd.DataFrame()
+    #ワークシートのみを取り出す→座標、id作成(worksheet一覧を取り出しparentのあるワークシートを除外していく)
+    ws = self.ws_positions(ws_masta['worksheet'])
+    ws['worksheet_id'] = ws['worksheet_name'].map(self.make_id)
+    ws_not_has_parent = ws['worksheet_name'].dropna().unique()
+    #ダッシュボードとワークシート→上記wsビューと結合
+    db = ws_masta['dashboard'].rename(columns={'name': 'worksheet_name'})
+    db['dashboard_id'] = db['dashboard_name'].map(self.make_id)
+    db = pd.merge(db, ws, on='worksheet_name', how='left')
+    #データソースとワークシート→上記wsビューと結合
+    ds = ws_masta['worksheet_datasource']
+    ds['datasource_id'] = ds['name'].map(self.make_id)
+    ds = pd.merge(ds, ws, on='worksheet_name', how='left')
+    #nodeを追加
+    nodes.extend(self.create_nodes(db, {'id': 'dashboard_id', 'name': 'dashboard_name'}))
+    nodes.extend(self.create_nodes(ds, {'id': 'datasource_id', 'name': 'name'}))
+    #ws_not_has_parentに残ったwsをnodeとして追加
+    ws_has_parent = db['worksheet_name'].dropna().unique()
+    ws_not_has_parent = ws[~ws['worksheet_name'].isin(ws_has_parent)]
+    if len(ws_not_has_parent)>0:
+      nodes.extend(self.create_nodes(ws_not_has_parent))
+    db_ws = ws_masta['dashboard'].rename(columns={'dashboard_name': 'dashboard', 'name': 'worksheet'}).melt(
+      value_vars=["dashboard", "worksheet"],
+      var_name="source",
+      value_name="name"
+    ).drop_duplicates()
+    #worksheetのnodeを追加
+    source_rename = ['dashboard', 'datasource', 'worksheet']
+    actions_source = actions_source.rename(
+      columns={
+        col: f'source_{col}'
+        for col in source_rename
+        if col in actions_source.columns
+      }
     )
-    elements = self.action_elements(df_dict["source"], df_dict["target"])
+    actions = pd.merge(actions_source, actions_target, on=['action_name', 'action_caption'])
+    for col in ['source_exclude', 'target_exclude']:
+      if col in actions.columns:
+        actions[col] = actions[col].apply(
+          lambda x: np.nan if isinstance(x, list) and len(x) == 0 else x
+        )
+    edges = self.create_edges(ws, db, ds, db_ws, actions)
     stylesheet = self.stylesheet_maps['actions_info']
-    return elements, stylesheet
+    return nodes+edges, stylesheet
+
+  #parent idを特定する
+  @staticmethod
+  def get_id(df, row):
+    for col in ('dashboard_id', 'datasource_id'):
+      if col in df.columns and pd.notna(row.get(col)):
+        return row[col]
+    return None
+
+  #wsの一覧から座標を計算する
+  @staticmethod
+  def ws_positions(df):
+    WS_X_START = 80
+    WS_Y_START = 80
+    WS_GAP_X = 200
+    WS_GAP_Y = 120
+    df = df.drop_duplicates().reset_index(drop=True)
+    WS_COLS = math.ceil(math.sqrt(len(df)))
+    df['x'] = WS_X_START + (df.index % WS_COLS) * WS_GAP_X
+    df['y'] = WS_Y_START + (df.index // WS_COLS) * WS_GAP_Y
+    return df
+
+  #文字列をハッシュ値にしてid化する
+  @staticmethod
+  def make_id(value):
+    return hashlib.sha256(str(value).encode('utf-8')).hexdigest()[:10]
 
   @staticmethod
-  def action_elements(df_source, df_target):
-      #same as datasource_element
-      df_source["parent"] = df_source["datasource_name"].combine_first(df_source["dashboard_name"])
-      elements = []
-      node_ids = set()
+  def create_nodes(df, parent_cols=None):
+    elements = []
+    if parent_cols is not None:
+      parent_id = parent_cols['id']
+      parent_name = parent_cols['name']
+      # parentは重複排除
+      parents = df[[parent_id, parent_name]].drop_duplicates()
+      for _, row in parents.iterrows():
+        elements.append({
+          "data": {
+            "id": row[parent_id],
+            "label": row[parent_name]
+          }
+        })
+      # worksheet view
+      for _, row in df.iterrows():
+        worksheet_view_id = f'{row[parent_id]}/{row["worksheet_id"]}'
+        elements.append({
+          "data": {
+              "id": worksheet_view_id,
+              "parent": row[parent_id],
+              "label": row["worksheet_name"],
+              "entity": row["worksheet_id"]
+          },
+          "position": {
+              "x": row["x"],
+              "y": row["y"]
+          }
+        })
+    else:
+      # worksheet view
+      for _, row in df.iterrows():
+        worksheet_view_id = row["worksheet_id"]
+        elements.append({
+          "data": {
+              "id": worksheet_view_id,
+              "label": row["worksheet_name"],
+              "entity": row["worksheet_id"]
+          },
+          "position": {
+              "x": row["x"],
+              "y": row["y"]
+          }
+        })
+    return elements
 
-      NONE_PARENT = "None・Parent・Node"
+  #取り出した値がNaNだった際にNoneに置き換える
+  @staticmethod
+  def convert_nan(value, menu='string'):
+    if isinstance(value, list):
+      return value
+    if pd.isna(value):
+      return None if menu == 'string' else []
+    return value
 
-      def add_node(node_id, label, parent=None, comment=None):
-          if node_id not in node_ids:
-              data = {"id": node_id, "label": label}
-              if parent:
-                  data["parent"] = parent
-              if comment:
-                  data["comment"] = comment
-              elements.append({"data": data})
-              node_ids.add(node_id)
-
-      def add_edge(src, tgt, label, comment=None):
-          data = {"source": src, "target": tgt, "label": label}
-          if comment:
-              data["comment"] = comment
-          elements.append({"data": data})
-
-      # =====================
-      # Parent nodes
-      # =====================
-      parents = pd.concat([
-          df_source["parent"],
-          df_target["dashboard_name"],
-      ]).dropna().unique()
-
-      for p in parents:
-          add_node(p, p, comment="parent")
-
-      add_node(NONE_PARENT, NONE_PARENT, comment="parent")
-
-      # =====================
-      # Nodes（name 単位）
-      # =====================
-      name_parent = {}
-      # source 側（優先）
-      for _, row in df_source.iterrows():
-          name = row["name"]
-          if pd.notna(row.get("parent")):
-              parent = row["parent"]
+  #source targetの２つのdfからedgeのelementを作成する
+  def create_edges(self, ws, db, ds, db_ws, actions):
+    elements = []
+    for _, row in actions.iterrows():
+      source_dashboard = self.convert_nan(row.get('source_dashboard', None))
+      source_datasource = self.convert_nan(row.get('source_datasource', None))
+      source_worksheet = self.convert_nan(row.get('source_worksheet', None))
+      source_exclude = self.convert_nan(row.get('source_exclude', None))
+      action_name = row['action_name']
+      action_caption = row['action_caption']
+      target = self.convert_nan((row.get('target', None)))
+      target_exclude = self.convert_nan(row.get('target_exclude', None))
+      #source
+      if source_worksheet is not None:
+        source_list = [f'{self.make_id(source_dashboard)}/{self.make_id(source_worksheet)}']
+      else:
+        if source_dashboard is not None:
+          source_parent = source_dashboard
+          source_df = db[db['dashboard_name']==source_parent]
+        elif source_datasource is not None:
+          source_parent = source_datasource
+          source_df = ds[ds['name']==source_parent]
+        if source_exclude is None:
+          source_list = [self.make_id(source_parent)]
+        else:
+          source_df = source_df[~source_df['worksheet_name'].isin(source_exclude)]
+          id_cols = ['dashboard_id', 'datasource_id']
+          existing_cols = [col for col in id_cols if col in source_df.columns]
+          if existing_cols:
+            source_df['parent_id'] = source_df[existing_cols].bfill(axis=1).iloc[:, 0]
           else:
-              parent = NONE_PARENT
-          name_parent.setdefault(name, parent)
+            source_df['parent_id'] = None
+          source_list = (source_df['parent_id'] + '/' + source_df['worksheet_id']).tolist()
+      #target
+      target_list = []
+      target_type = db_ws[db_ws['name']==target]['source'].iloc[0]
+      if target_type == 'dashboard':
+        target_db = db[db['dashboard_name']==target]
+        target_db = target_db[~target_db['worksheet_name'].isin(target_exclude)]
+        target_list.extend((target_db['dashboard_id'] + '/' + target_db['worksheet_id']).tolist())
+      elif target_type == 'worksheet':
+        target_db = db[db['worksheet_name']==target]
+        target_ds = ds[ds['worksheet_name']==target]
+        if len(target_db)>0:
+          target_list.extend((target_db['dashboard_id'] + '/' + target_db['worksheet_id']).tolist())
+        if len(target_ds)>0:
+          target_list.extend((target_ds['datasource_id'] + '/' + target_ds['worksheet_id']).tolist())
+        if not len(target_list)>0:
+          target_list.extend((ws['worksheet_id']).tolist())
+      edges = [
+        {
+          "data": {
+            "id": f"{action_name}/{source_id}/{target_id}",
+            "source": source_id,
+            "target": target_id,
+            "label": action_caption
+          }
+        }
+        for source_id in source_list
+        for target_id in target_list
+      ]
+      elements.extend(edges)
+    return elements
 
-      # target 側（source に無い name のみ）
-      for _, row in df_target.iterrows():
-          name = row["name"]
-
-          if name not in name_parent:
-              if pd.notna(row.get("dashboard_name")):
-                  parent = row["dashboard_name"]
-              else:
-                  parent = NONE_PARENT
-              name_parent[name] = parent
-
-      # ノード生成
-      for name, parent in name_parent.items():
-          add_node(name, name, parent=parent, comment="child")
-
-      # =====================
-      # Edges（action_name 単位）
-      # =====================
-      for _, src in df_source.iterrows():
-          action = src["action_name"]
-          caption = src["action_caption"]
-          src_name = src["name"]
-
-          targets = df_target[df_target["action_name"] == action]
-          for _, tgt in targets.iterrows():
-              tgt_name = tgt["name"]
-              add_edge(src_name, tgt_name, caption, comment="child")
-      return elements
-  
   def dashboard_and_layout_in_zone(self):
     zone_info = self.zone_info['zone']
     if not zone_info.empty:
