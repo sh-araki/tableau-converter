@@ -130,11 +130,12 @@ class PrepInfoExtract:
         self.action_base(action_dict, node_baseid, collectors, 'action')
         # --- action detail ---
         self.logger.info(f"[{self.run_id}] extract action detail")
-        df_action_detail = (
-          pd.DataFrame([{k: action_dict.get(k) for k in extract_map['column']}])
-          .assign(node_baseid=node_baseid, id=action_dict['id'])
-        )
-        collectors['action_detail'].append(df_action_detail)
+        if action_dict:
+          df_action_detail = (
+            pd.DataFrame([{k: action_dict.get(k) for k in extract_map['column']}])
+            .assign(node_baseid=node_baseid, id=action_dict['id'])
+          )
+          collectors['action_detail'].append(df_action_detail)
         self.logger.info(f"[{self.run_id}] extract annotation base and detail")
         # --- annotation ---
         for anno_type, key in [("before", "beforeActionAnnotations"), ("after", "afterActionAnnotations")]:
@@ -247,12 +248,13 @@ class PrepInfoExtract:
 
   #action_baseの情報を取り出し
   def action_base(self, action_dict, node_baseid, collectors, basetype):
-    df_action_base = (
-      pd.DataFrame([action_dict])[self.extract_maps['common']]
-      .assign(node_baseid=node_baseid, node_basetype=basetype)
-    )
-    self.logger.debug(f"[{self.run_id}] df action base: {df_action_base}")
-    collectors['node_masta'].append(df_action_base)
+    if action_dict:
+      df_action_base = (
+        pd.DataFrame([action_dict])[self.extract_maps['common']]
+        .assign(node_baseid=node_baseid, node_basetype=basetype)
+      )
+      self.logger.debug(f"[{self.run_id}] df action base: {df_action_base}")
+      collectors['node_masta'].append(df_action_base)
 
   #annotationNodeのすべての列を取り出し
   def anno_node_convert(self, data_list):
