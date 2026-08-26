@@ -312,6 +312,10 @@
     ".v1.Container": {
         "column": []
     },
+    ".v2018_2_3.SuperTransform": {
+        "column": [],
+        "annotations": true
+    },
     ".v2018_3_3.SuperPivot": {
         "column": [
             "defaultAggregation",
