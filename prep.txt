@@ -55,3 +55,7 @@ v3.0
  1 Use st-cytoscape
  2 Output html data
  3 Output Prep Flow UML
+v3.1
+ 1 Supports Super Transform node
+ 2 List the fields within the initial node in the UML diagram.
+ 3 Specify the join type for the join node in the UML diagram.
