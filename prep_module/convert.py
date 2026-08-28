@@ -109,6 +109,7 @@ class PrepNodesView:
   #各nodeの最終fieldsをdictに入れて返す
   def node_fields_and_uml_results(self):
     node_masta = self.node_masta
+    initial_nodes = self.initial_nodes
     node_fields_dict= {}
     node_uml_dict = {}
     for _, row in self.node_baseinfo().iterrows():
@@ -134,6 +135,10 @@ class PrepNodesView:
           self.fields_info
           .query(f"node_baseid == '{node_baseid}'")
         )
+        exists = initial_nodes['node_baseid'].eq(node_baseid).any()
+        if exists:
+          self.logger.info(f"[{self.run_id}] write fields to uml")
+          info_dict['fields'] = node_fields.drop(columns='node_baseid').to_dict(orient='records')
         self.logger.info(f"[{self.run_id}] get node action")
         node_action = node_actions[node_actions['node_basetype']=='action']
         self.logger.info(f"[{self.run_id}] convert node fields")
@@ -290,6 +295,7 @@ class PrepNodesView:
             info_dict['new_column'] = 'Table Names'
           case 'join':
             info_dict['conditions'] = detail.conditions
+            info_dict['jointype'] = detail.joinType
             try:
               base = node_fields['name'].str.split('-', n=1).str[0]
               count = node_fields.groupby(base).cumcount()
