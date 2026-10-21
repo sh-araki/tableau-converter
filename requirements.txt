@@ -1,8 +1,0 @@
-streamlit
-pandas
-numpy
-st-cytoscape
-xlsxwriter
-Pillow
-lxml
-graphviz
