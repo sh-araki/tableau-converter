@@ -69,6 +69,22 @@ const dfStore = [];
 /* ===============================
  * 汎用 table renderer
  * =============================== */
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function formatCell(value) {
+  if (value === null || value === undefined) return "";
+  if (typeof value === "object") return JSON.stringify(value, null, 2);
+  return String(value);
+}
+
 function renderTable(rows) {
   if (rows.length === 0) return "<i>no data</i>";
 
@@ -81,13 +97,13 @@ function renderTable(rows) {
   if (columns.length === 0) return "";
 
   let html = "<table><thead><tr>";
-  columns.forEach(col => html += `<th>${col}</th>`);
+  columns.forEach(col => html += `<th>${escapeHtml(col)}</th>`);
   html += "</tr></thead><tbody>";
 
   rows.forEach(row => {
     html += "<tr>";
     columns.forEach(col => {
-      html += `<td>${row[col] ?? ""}</td>`;
+      html += `<td><pre style="margin:0;white-space:pre-wrap">${escapeHtml(formatCell(row[col]))}</pre></td>`;
     });
     html += "</tr>";
   });
@@ -102,7 +118,7 @@ function renderTable(rows) {
  * node 選択時レンダリング
  * =============================== */
 function renderNodeData(nodeId, nodeLabel) {
-  let html = `<h2>${nodeLabel}</h2>`;
+  let html = `<h2>${escapeHtml(nodeLabel)}</h2>`;
 
   Object.entries(dfStore).forEach(([dfName, df]) => {
     const filtered = df.filter(r => r.node_baseid == nodeId);
@@ -110,7 +126,7 @@ function renderNodeData(nodeId, nodeLabel) {
     if (filtered.length === 0) return;
     if (!hasVisibleColumns(filtered)) return;
 
-    html += `<h3>${dfName}</h3>`;
+    html += `<h3>${escapeHtml(dfName)}</h3>`;
     html += renderTable(filtered);
   });
 

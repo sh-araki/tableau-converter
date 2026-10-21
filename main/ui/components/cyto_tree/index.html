@@ -78,11 +78,11 @@ function initializeGraph(elements, stylesheet) {
     }
   });
   collapseAll();
-  cy.layout({
+  cy.elements(':visible').layout({
       name: 'breadthfirst',
       directed: true,
       padding: 20,
-      spacingFactor: 0.8
+      spacingFactor: 1.15
   }).run();
   cy.zoom(0.8);
   cy.center();
@@ -120,6 +120,13 @@ function initializeGraph(elements, stylesheet) {
         children.show();
         childEdges.show();
     }
+    cy.elements(':visible').layout({
+      name: 'breadthfirst',
+      directed: true,
+      padding: 20,
+      spacingFactor: 1.15
+    }).run();
+    cy.fit(cy.elements(':visible'), 20);
   });
 }
 // -------------------------

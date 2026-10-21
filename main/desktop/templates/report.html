@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tableau Desktop report</title>
+  <script src="https://unpkg.com/cytoscape@3.33.1/dist/cytoscape.min.js"></script>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; padding: 1rem; }
+    header { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    select { min-width: 20rem; padding: .4rem; }
+    #cy { height: 65vh; min-height: 420px; border: 1px solid #888; margin-top: 1rem; }
+    #details { max-height: 30rem; overflow: auto; margin-top: 1rem; }
+    table { border-collapse: collapse; width: 100%; font-size: .8rem; margin-bottom: 1rem; }
+    th, td { border: 1px solid #999; padding: .3rem; text-align: left; vertical-align: top; }
+    th { position: sticky; top: 0; background: Canvas; }
+    .muted { opacity: .7; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title"></h1>
+    <label>Graph <select id="graph-select"></select></label>
+  </header>
+  <div id="cy"></div>
+  <section id="details" class="muted">ノードを選択すると詳細を表示します。</section>
+  <section>
+    <h2>Data tables</h2>
+    <label>Table <select id="dataframe-select"></select></label>
+    <div id="dataframe-table"></div>
+  </section>
+  <script>
+    const reportTitle = __REPORT_TITLE__;
+    const graphStore = [];
+    const detailStore = {};
+    const dataframeStore = {};
+    let cy;
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[char]);
+    }
+
+    function renderRows(name, rows) {
+      if (!rows.length) return '';
+      const columns = [...new Set(rows.flatMap(row => Object.keys(row)))];
+      const head = columns.map(column => `<th>${escapeHtml(column)}</th>`).join('');
+      const body = rows.map(row => `<tr>${columns.map(
+        column => `<td>${escapeHtml(row[column])}</td>`
+      ).join('')}</tr>`).join('');
+      return `<h3>${escapeHtml(name)}</h3><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+    }
+
+    function showDetails(node) {
+      const data = node.data();
+      const path = data.fullPath;
+      const matching = path && detailStore[path] ? {[path]: detailStore[path]} : {};
+      const content = Object.entries(matching).map(([name, rows]) => renderRows(name, rows)).join('');
+      const nodeRows = [Object.fromEntries(
+        Object.entries(data).filter(([, value]) => value !== undefined)
+      )];
+      document.getElementById('details').innerHTML =
+        `<h2>${escapeHtml(data.label ?? data.id)}</h2>` +
+        (content || renderRows('Node details', nodeRows));
+      document.getElementById('details').classList.remove('muted');
+    }
+
+    function directChildren(node) {
+      return node.outgoers('node');
+    }
+
+    function collapseStructure() {
+      cy.nodes().forEach(node => {
+        if (node.id() !== 'root') node.hide();
+      });
+      cy.edges().hide();
+      const root = cy.getElementById('root');
+      directChildren(root).show();
+      root.outgoers('edge').show();
+    }
+
+    function toggleStructureBranch(node) {
+      const children = directChildren(node);
+      if (!children.length) return;
+      if (children.filter(':visible').length) {
+        children.forEach(child => {
+          child.successors().hide();
+          child.hide();
+        });
+        node.outgoers('edge').hide();
+      } else {
+        children.show();
+        node.outgoers('edge').show();
+      }
+      cy.elements(':visible').layout({
+        name: 'breadthfirst', directed: true, padding: 24, spacingFactor: 1.15
+      }).run();
+      cy.fit(cy.elements(':visible'), 24);
+    }
+
+    function renderGraph(index) {
+      const graph = graphStore[index];
+      if (cy) cy.destroy();
+      cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: graph.elements,
+        style: graph.stylesheet,
+        layout: {name: graph.layout, directed: true, padding: 24}
+      });
+      if (graph.id === 'structure') {
+        collapseStructure();
+        cy.elements(':visible').layout({
+          name: 'breadthfirst', directed: true, padding: 24, spacingFactor: 1.15
+        }).run();
+      }
+      cy.on('tap', 'node', event => {
+        showDetails(event.target);
+        if (graph.id === 'structure') toggleStructureBranch(event.target);
+      });
+      cy.fit(cy.elements(':visible'), 24);
+    }
+
+    document.getElementById('title').textContent = reportTitle;
+    const select = document.getElementById('graph-select');
+    graphStore.forEach((graph, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = graph.title;
+      select.appendChild(option);
+    });
+    select.addEventListener('change', event => renderGraph(Number(event.target.value)));
+    if (graphStore.length) renderGraph(0);
+
+    const dataframeSelect = document.getElementById('dataframe-select');
+    const dataframeNames = Object.keys(dataframeStore).filter(name => dataframeStore[name].length);
+    dataframeNames.forEach(name => {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      dataframeSelect.appendChild(option);
+    });
+    function renderDataframe(name) {
+      document.getElementById('dataframe-table').innerHTML =
+        name ? renderRows(name, dataframeStore[name]) : '<p class="muted">No data</p>';
+    }
+    dataframeSelect.addEventListener('change', event => renderDataframe(event.target.value));
+    renderDataframe(dataframeNames[0]);
+  </script>
+</body>
+</html>

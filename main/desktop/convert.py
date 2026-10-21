@@ -11,6 +11,7 @@ import json
 import logging
 import math
 import hashlib
+from functools import lru_cache
 
 
 class DesktopNodesView:
@@ -26,6 +27,7 @@ class DesktopNodesView:
     with open(stylesheet_path, encoding="utf-8") as f:
       self.stylesheet_maps = json.load(f)
     
+  @lru_cache(maxsize=16)
   def cytoscape_elements(self):
     dfs = self.dfs
     paths = dfs.keys()
@@ -82,7 +84,26 @@ class DesktopNodesView:
   def clean_dataframe(df):
       return df.dropna(axis=1, how="all")
 
+  def datasource_display_names(self):
+    columns = self.dfs.get('/datasources/datasource/column')
+    datasource_names = {}
+    table_names = {}
+    if columns is None or columns.empty:
+      return datasource_names, table_names
+    for _, row in columns.iterrows():
+      internal = row.get('datasource_name')
+      caption = row.get('datasource_caption')
+      if pd.notna(internal) and pd.notna(caption):
+        datasource_names[str(internal)] = str(caption)
+      if row.get('datatype') == 'table' and pd.notna(row.get('caption')):
+        raw_name = str(row.get('name', ''))
+        table_id = raw_name.rsplit('[', 1)[-1].rstrip(']')
+        if table_id:
+          table_names[table_id] = str(row['caption'])
+    return datasource_names, table_names
+
   #フィールドの概要ビューを作成する
+  @lru_cache(maxsize=16)
   def datasource_overview(self):
     dfs = self.dfs
     data_map = {
@@ -101,22 +122,22 @@ class DesktopNodesView:
             "class": "source_connection_class"
           })
         df_map[k] = self.clean_dataframe(df)
-    #metadata
-    metadata = df_map['metadata']
-    columns_list = metadata.columns
-    remove_list = ["sub_index", "sub_tag", "sub_text"]
-    index_list = [x for x in columns_list if x not in remove_list]
-    pivot = (
-      metadata.pivot(
-        index=index_list,
-        columns="sub_tag",
-        values="sub_text"
-      )
-    ).reset_index().rename(columns={'local-name': 'name'}).drop(columns=['index'])
-    df_map['metadata'] = pivot
+    # Metadata is optional in packaged datasource files.
+    metadata = df_map.get('metadata')
+    if metadata is not None and {'sub_tag', 'sub_text'}.issubset(metadata.columns):
+      remove_list = ["sub_index", "sub_tag", "sub_text"]
+      index_list = [x for x in metadata.columns if x not in remove_list]
+      pivot = (
+        metadata.pivot(
+          index=index_list,
+          columns="sub_tag",
+          values="sub_text"
+        )
+      ).reset_index().rename(columns={'local-name': 'name'}).drop(columns=['index'], errors='ignore')
+      df_map['metadata'] = pivot
 
     #calculation
-    if 'calculation' in df_map:
+    if 'calculation' in df_map and 'datasource_column' in df_map:
       calculation = df_map['calculation']
       df_replacemap = df_map['datasource_column'][['caption', 'name', 'datasource_name']]
       #行カウントとパラメーターの文字列を変換
@@ -142,6 +163,17 @@ class DesktopNodesView:
           regex=False
         )
       df_map['calculation'] = calculation
+    datasource_names, _ = self.datasource_display_names()
+    for key, df in df_map.items():
+      if 'datasource_name' in df.columns:
+        df = df.copy()
+        df['datasource_name'] = df['datasource_name'].map(
+          lambda value: datasource_names.get(str(value), value)
+        )
+      if 'caption' in df.columns and 'name' in df.columns:
+        df = df.copy()
+        df['name'] = df['caption'].where(df['caption'].notna(), df['name'])
+      df_map[key] = df
     return df_map
 
   #データソースのマップをデータソースごとに作る(親子関係のみ)
@@ -166,7 +198,7 @@ class DesktopNodesView:
   #]
 
   @staticmethod
-  def datasource_node(row, node_type, table_type):#, i):
+  def datasource_node(row, node_type, table_type, table_names=None):#, i):
     #if table_type == 'left_table':
     #  x = (i % 5) * 250
     #  y = (i // 5) * 150
@@ -175,7 +207,7 @@ class DesktopNodesView:
     #  y = (i // 5) * 150
     data_dict = {
       "id": row[table_type],
-      "label": row[table_type],
+      "label": (table_names or {}).get(str(row[table_type]), row[table_type]),
       "comment": node_type
     }
     #position_dict ={"x": x, "y": y}
@@ -184,9 +216,11 @@ class DesktopNodesView:
     return {"data": data_dict}#, "position": position_dict}
 
   @staticmethod
-  def datasource_edge(row, node_type, edges):
+  def datasource_edge(row, node_type, edges, table_names=None):
     edge_id = f"{row['left_table']}_{row['right_table']}"
     edge_label = f"{row['left']}{row['operator']}{row['right']}"
+    for internal, display in (table_names or {}).items():
+      edge_label = edge_label.replace(f'[{internal}]', f'[{display}]')
     edge_dict = {
       "data": {
         "id": edge_id, 
@@ -202,9 +236,11 @@ class DesktopNodesView:
       edges[edge_id]['data']['label'] += f"\n{edge_label}"
 
   #datasourceの結合・リレーション関係のelementを返す
+  @lru_cache(maxsize=16)
   def datasource_cytoscape_element(self):
     all_data = self.datasource_connection
     if not all_data.empty:
+      datasource_names, table_names = self.datasource_display_names()
       datasources = all_data['datasource_name'].unique().tolist()
       elements_dict = {}
       for datasource in datasources:
@@ -217,25 +253,35 @@ class DesktopNodesView:
           for i, (_, row) in enumerate(df_parent.iterrows()):
             #nodes[row['left_table']] = self.datasource_node(row, 'parent', 'left_table', i)
             #nodes[row['right_table']] = self.datasource_node(row, 'parent', 'right_table', i)
-            nodes[row['left_table']] = self.datasource_node(row, 'parent', 'left_table')
-            nodes[row['right_table']] = self.datasource_node(row, 'parent', 'right_table')
-            self.datasource_edge(row, 'parent', edges)
+            nodes[row['left_table']] = self.datasource_node(row, 'parent', 'left_table', table_names)
+            nodes[row['right_table']] = self.datasource_node(row, 'parent', 'right_table', table_names)
+            self.datasource_edge(row, 'parent', edges, table_names)
         #child
         df_child = df[df['type']=='child']
         if not df_child.empty:
           for i, (_, row) in enumerate(df_child.iterrows()):
             #nodes[row['left_table']] = self.datasource_node(row, 'child', 'left_table', i)
             #nodes[row['right_table']] = self.datasource_node(row, 'child', 'right_table', i)
-            nodes[row['left_table']] = self.datasource_node(row, 'child', 'left_table')
-            nodes[row['right_table']] = self.datasource_node(row, 'child', 'right_table')
-            self.datasource_edge(row, 'child', edges)
-        elements_dict[datasource] = list(nodes.values()) + list(edges.values())
+            nodes[row['left_table']] = self.datasource_node(row, 'child', 'left_table', table_names)
+            nodes[row['right_table']] = self.datasource_node(row, 'child', 'right_table', table_names)
+            self.datasource_edge(row, 'child', edges, table_names)
+        node_items = list(nodes.values())
+        columns = max(1, math.ceil(math.sqrt(len(node_items))))
+        for index, node in enumerate(node_items):
+          node["position"] = {
+            "x": (index % columns) * 260 + 130,
+            "y": (index // columns) * 180 + 90,
+          }
+        display_name = datasource_names.get(str(datasource), datasource)
+        key = display_name if display_name not in elements_dict else f'{display_name} ({datasource})'
+        elements_dict[key] = node_items + list(edges.values())
       stylesheet = self.stylesheet_maps['datasource_info']
       return elements_dict, stylesheet
     else:
       return None, None
 
   #ダッシュボードに入っているワークシートのマスタを作成する
+  @lru_cache(maxsize=16)
   def return_worksheet_dashboard_masta(self):
     dfs = self.dfs
     zone_info = self.zone_info
@@ -296,7 +342,10 @@ class DesktopNodesView:
       )
       base = base.rename(columns={"command_command": "command_type", "exclude": "target_exclude"})
       # exclude列をリスト化
-      base["target_exclude"] = base["target_exclude"].fillna("").str.split(",")
+      if "target_exclude" in base.columns:
+        base["target_exclude"] = base["target_exclude"].fillna("").str.split(",")
+      else:
+        base["target_exclude"] = [[] for _ in range(len(base))]
       # <<COMMA>> 復元
       base["target_exclude"] = base["target_exclude"].apply(
           lambda lst: [x.replace("<<COMMA>>", ",") for x in lst]
@@ -335,6 +384,7 @@ class DesktopNodesView:
   ##
   ##];
 
+  @lru_cache(maxsize=16)
   def actions_overview(self):
     # worksheet master
     ws_masta = self.return_worksheet_dashboard_masta()
@@ -342,6 +392,11 @@ class DesktopNodesView:
     actions_target = self.actions_target()
     nodes = []
     edges = []
+    stylesheet = self.stylesheet_maps['actions_info']
+
+    required_maps = {'worksheet', 'dashboard', 'worksheet_datasource'}
+    if not required_maps.issubset(ws_masta) or actions_source is None or actions_target is None:
+      return [], stylesheet
 
     #ワークシートのみを取り出す→座標、id作成(worksheet一覧を取り出しparentのあるワークシートを除外していく)
     ws = self.ws_positions(ws_masta['worksheet'])
@@ -354,10 +409,11 @@ class DesktopNodesView:
     #データソースとワークシート→上記wsビューと結合
     ds = ws_masta['worksheet_datasource']
     ds['datasource_id'] = ds['name'].map(self.make_id)
+    ds['display_name'] = ds['caption'].where(ds['caption'].notna(), ds['name'])
     ds = pd.merge(ds, ws, on='worksheet_name', how='left')
     #nodeを追加
     nodes.extend(self.create_nodes(db, {'id': 'dashboard_id', 'name': 'dashboard_name'}))
-    nodes.extend(self.create_nodes(ds, {'id': 'datasource_id', 'name': 'name'}))
+    nodes.extend(self.create_nodes(ds, {'id': 'datasource_id', 'name': 'display_name'}))
     #ws_not_has_parentに残ったwsをnodeとして追加
     ws_has_parent = db['worksheet_name'].dropna().unique()
     ws_not_has_parent = ws[~ws['worksheet_name'].isin(ws_has_parent)]
@@ -384,7 +440,6 @@ class DesktopNodesView:
           lambda x: np.nan if isinstance(x, list) and len(x) == 0 else x
         )
     edges = self.create_edges(ws, db, ds, db_ws, actions)
-    stylesheet = self.stylesheet_maps['actions_info']
     return nodes+edges, stylesheet
 
   #parent idを特定する
@@ -480,7 +535,7 @@ class DesktopNodesView:
       action_name = row['action_name']
       action_caption = row['action_caption']
       target = self.convert_nan((row.get('target', None)))
-      target_exclude = self.convert_nan(row.get('target_exclude', None))
+      target_exclude = self.convert_nan(row.get('target_exclude', None), menu='list')
       #source
       if source_worksheet is not None:
         source_list = [f'{self.make_id(source_dashboard)}/{self.make_id(source_worksheet)}']
@@ -533,9 +588,10 @@ class DesktopNodesView:
       elements.extend(edges)
     return elements
 
+  @lru_cache(maxsize=16)
   def dashboard_and_layout_in_zone(self):
-    zone_info = self.zone_info['zone']
-    if not zone_info.empty:
+    zone_info = self.zone_info.get('zone')
+    if zone_info is not None and not zone_info.empty:
       db_set = set(zone_info['dashboard_name'].tolist())
       ly_set = set(zone_info['layout_type'].tolist())
       return {
@@ -543,22 +599,33 @@ class DesktopNodesView:
         "layout_type": ly_set
       }
 
+  @lru_cache(maxsize=64)
   def zone_elements(self, dashboard_name, layout_type):
     zone_info = self.zone_info
     zone = zone_info['zone']
     elements = []
     zone = zone[(zone['dashboard_name']==dashboard_name) & (zone['layout_type']==layout_type)]
     for _, row in zone.iterrows():
+      width = max(1, int(row["w"]))
+      height = max(1, int(row["h"]))
+      label = next(
+        (
+          str(row[column])
+          for column in ("name", "type-v2", "type", "id")
+          if column in row and pd.notna(row[column]) and str(row[column]).strip()
+        ),
+        str(row["id"]),
+      )
       elements.append({
         "data": {
           "id": row["id"],
-          "label": row["id"],
-          "w": int(row["w"]),
-          "h": int(row["h"])
+          "label": label,
+          "w": width,
+          "h": height
         },
         "position": {
-          "x": int(row["x"]),
-          "y": int(row["y"])
+          "x": int(row["x"]) + width / 2,
+          "y": int(row["y"]) + height / 2
         }
       })
     stylesheet = self.stylesheet_maps['zones_info']

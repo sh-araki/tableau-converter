@@ -1,6 +1,5 @@
 from .extract import PrepInfoExtract
 from .convert import PrepNodesView
-import pandas as pd
 import logging
 import numpy as np
 import json
@@ -12,7 +11,7 @@ class PrepMainProcess:
     self.data_dict = data_dict
     self.run_id = run_id
     base_dir = Path(__file__).resolve().parent
-    html = base_dir / "index.html"
+    html = base_dir / "templates" / "report.html"
     self.html = html.read_text(encoding="utf-8")
     self.logger = logging.getLogger(self.__class__.__name__)
     self.run_id = run_id
@@ -42,9 +41,13 @@ class PrepMainProcess:
       df = df.replace({np.nan: None})
       data = df.to_dict("records")
       dfs_copy[key] = data
+    def json_for_script(value):
+      # Do not allow embedded data to close the script element.
+      return json.dumps(value, ensure_ascii=False).replace("</", "<\\/")
+
     html = (
-      html.replace("const elements = [];", f"const elements = {elements};")
-        .replace("style: []", f"style: {stylesheet}")
-        .replace("const dfStore = [];", f"const dfStore = {json.dumps(dfs_copy, ensure_ascii=False)};")
+      html.replace("const elements = [];", f"const elements = {json_for_script(elements)};")
+        .replace("style: []", f"style: {json_for_script(stylesheet)}")
+        .replace("const dfStore = [];", f"const dfStore = {json_for_script(dfs_copy)};")
     )
     return html

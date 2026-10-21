@@ -23,7 +23,7 @@ class PrepInfoExtract:
     self.logger.info(f"[{self.run_id}] extract initial nodes")
     df = pd.DataFrame(self.initial_nodes, columns=['node_baseid'])
     df_dict = {'initialNodes': df}
-    self.logger.debug(f"[{self.run_id}] df dict: {df_dict}")
+    self.logger.debug("[%s] df dict: %s", self.run_id, df_dict)
     return df_dict
 
   def settings_df(self):
@@ -48,7 +48,7 @@ class PrepInfoExtract:
       )
     df = pd.DataFrame(dict_list).sort_values(by=["x", "y"])
     df_dict = {'settings': df.reset_index(drop=True)}
-    self.logger.debug(f"[{self.run_id}] df dict: {df_dict}")
+    self.logger.debug("[%s] df dict: %s", self.run_id, df_dict)
     return df_dict
 
   def connections_df(self):
@@ -67,7 +67,7 @@ class PrepInfoExtract:
     df = pd.DataFrame(dict_list)
     df = df.rename(columns={'id': 'connectionId', 'name': 'connectionName'})
     df_dict = {'connections': df.reset_index(drop=True)}
-    self.logger.debug(f"[{self.run_id}] df dict: {df_dict}")
+    self.logger.debug("[%s] df dict: %s", self.run_id, df_dict)
     return df_dict
 
   def parameters_df(self):
@@ -85,7 +85,7 @@ class PrepInfoExtract:
       dict_list.append(item_dict)
     df = pd.DataFrame(dict_list)
     df_dict = {'parameters': df.reset_index(drop=True)}
-    self.logger.debug(f"[{self.run_id}] df dict: {df_dict}")
+    self.logger.debug("[%s] df dict: %s", self.run_id, df_dict)
     return df_dict
 
   def node_info(self):
@@ -253,7 +253,7 @@ class PrepInfoExtract:
         pd.DataFrame([action_dict])[self.extract_maps['common']]
         .assign(node_baseid=node_baseid, node_basetype=basetype)
       )
-      self.logger.debug(f"[{self.run_id}] df action base: {df_action_base}")
+      self.logger.debug("[%s] df action base: %s", self.run_id, df_action_base)
       collectors['node_masta'].append(df_action_base)
 
   #annotationNodeのすべての列を取り出し
@@ -278,14 +278,14 @@ class PrepInfoExtract:
       self.logger.info(f"[{self.run_id}] extract annotation base data(action type: {anno_type}, action id: {anno_info['id']})")
       base_info_cols = extract_maps['common'] + ['namespace']
       base_info = {k: anno_info.get(k) for k in base_info_cols}
-      self.logger.debug(f"[{self.run_id}] annotation base info: {base_info}")
+      self.logger.debug("[%s] annotation base info: %s", self.run_id, base_info)
       base_info_list.append(base_info)
       # --- detail ---
       self.logger.info(f"[{self.run_id}] extract annotation base detail")
       detail_info_cols = anno_map_cols + ['id']
       detail_info = {k: anno_info.get(k) for k in detail_info_cols}
       detail_info_list.append(detail_info)
-      self.logger.debug(f"[{self.run_id}] annotation detail info: {detail_info}")
+      self.logger.debug("[%s] annotation detail info: %s", self.run_id, detail_info)
     return pd.DataFrame(base_info_list), pd.DataFrame(detail_info_list)
 
   #すべてのjsonを結合して取り出し
@@ -297,6 +297,5 @@ class PrepInfoExtract:
       **self.parameters_df(),
       **self.node_info()
     )
-    for info_dict in info_dicts.items():
-      self.logger.debug(f"[{self.run_id}] info dict list(all_extract_data): {info_dict}")
+    self.logger.debug("[%s] all extracted data: %s", self.run_id, info_dicts)
     return info_dicts
